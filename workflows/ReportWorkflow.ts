@@ -1,6 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
+import { SignTimeFunction } from "../functions/SignTimeFunction.ts";
 
 const ReportWorkflow = DefineWorkflow({
   callback_id: "report_workflow",
@@ -53,6 +54,12 @@ const report = ReportWorkflow.addStep(CreateReportFunction, {
   report_type: report_type.outputs.fields.report_type,
   user: report_type.outputs.fields.user,
 });
+
+ReportWorkflow.addStep(SignTimeFunction, {
+  time_entries: report.outputs.table_string,
+  holidays: report.outputs.holidays,
+  user: report_type.outputs.fields.user,
+})
 
 ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: ReportWorkflow.inputs.channel,

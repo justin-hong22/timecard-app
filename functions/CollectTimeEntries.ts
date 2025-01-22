@@ -28,7 +28,6 @@ export default SlackFunction(CollectTimeFunction, async ({ client }) => {
   if (!time_info.ok) {
     return { error: `Failed to retrieve time information - ${time_info.error}` };
   }
-  console.log(time_info);
   
   const time_entries = new Map<typeof String, {
     id: string;

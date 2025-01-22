@@ -4,6 +4,7 @@ import ReportWorkflow from "./workflows/ReportWorkflow.ts";
 import { SaveTimeFunction } from "./functions/SaveTimeFunction.ts";
 import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
+import { SignTimeFunction } from "./functions/SignTimeFunction.ts";
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
 import { TimeCardType } from "./types/TimeCardType.ts";
 
@@ -17,10 +18,10 @@ export default Manifest({
   description: "A blank template for building Slack apps with Deno",
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore],
-  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction],
+  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, SignTimeFunction],
   workflows: [SaveTimeWorkflow, ReportWorkflow],
   types: [TimeCardType],
-  outgoingDomains: [],
+  outgoingDomains: ['api.signtime.com'],
   botScopes: [
     "commands", 
     "chat:write", 
