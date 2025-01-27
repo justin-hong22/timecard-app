@@ -1,6 +1,5 @@
 import { DefineFunction, SlackFunction, Schema } from "deno-slack-sdk/mod.ts";
 import fs from "node:fs";
-import fs from "node:fs";
 
 export const NewDocumentFunction = DefineFunction({
   callback_id: "download_pdf",
@@ -54,28 +53,12 @@ export default SlackFunction(NewDocumentFunction, async({ /*inputs,*/ env }) => 
   body.append("parties[][name]", "送信者");
   body.append("parties[][email]", "hong.justin6@gmail.com.com");
   body.append("parties[][order]", "-1");
-    // 'Content-Type': 'application/json',
-  };
-
-  const body = new FormData();  
-  const filePath = "/Users/justinhong/Desktop/timecard-app/functions/templates/timecard_template.pdf";
-  const fileBuffer = fs.readFileSync(filePath);
-  const file = new Blob([fileBuffer], { type: 'application/pdf' });
-
-  body.append("file", file, "timecard_template.pdf");
-  body.append("subject", "test data");
-  body.append("expires_at", "2025-02-21T01:20:49.042Z");
-  body.append("parties[][name]", "送信者");
-  body.append("parties[][email]", "hong.justin6@gmail.com.com");
-  body.append("parties[][order]", "-1");
-
+  
   try
   {
     await fetch(endpoint, {
       method: "POST",
-      method: "POST",
       headers,
-      body,
       body,
     }).then(async (res: Response) => {
       if (res.status === 200) {
@@ -91,8 +74,6 @@ export default SlackFunction(NewDocumentFunction, async({ /*inputs,*/ env }) => 
   }
   catch(error)
   {
-    console.error(`An error was encountered - `, error);
-    throw new Error(`An error was encountered - ${error.message}`);
     console.error(`An error was encountered - `, error);
     throw new Error(`An error was encountered - ${error.message}`);
   }
