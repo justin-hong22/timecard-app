@@ -1,11 +1,11 @@
 import { DefineFunction, SlackFunction, Schema } from "deno-slack-sdk/mod.ts";
 import fs from "node:fs";
 
-export const NewDocumentCall = DefineFunction({
+export const NewDocumentFunction = DefineFunction({
   callback_id: "download_pdf",
   title: "Download PDF",
   description: "Download reports into a PDF",
-  source_file: "functions/NewDocumentCall.ts",
+  source_file: "functions/NewDocumentFunction.ts",
   input_parameters: {
     properties: {
       channel_id: {
@@ -33,7 +33,7 @@ export const NewDocumentCall = DefineFunction({
   },
 });
 
-export default SlackFunction(NewDocumentCall, async({ /*inputs,*/ env }) => {
+export default SlackFunction(NewDocumentFunction, async({ /*inputs,*/ env }) => {
   const endpoint = `https://api.signtime.com/api/v1/documents/new`;
   // const endpoint = "https://api.signtime.com/api/v1/users";
   

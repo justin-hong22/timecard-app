@@ -1,7 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
-import { NewDocumentCall } from "../functions/NewDocumentCall.ts";
+import { NewDocumentFunction } from "../functions/NewDocumentFunction.ts";
 
 const ReportWorkflow = DefineWorkflow({
   callback_id: "report_workflow",
@@ -55,7 +55,7 @@ const report = ReportWorkflow.addStep(CreateReportFunction, {
   user: report_type.outputs.fields.user,
 });
 
-ReportWorkflow.addStep(NewDocumentCall, {
+ReportWorkflow.addStep(NewDocumentFunction, {
   time_entries: report.outputs.table_string,
   holidays: report.outputs.holidays,
   user: report_type.outputs.fields.user,
