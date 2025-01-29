@@ -1,5 +1,4 @@
 import { DefineFunction, SlackFunction, Schema } from "deno-slack-sdk/mod.ts";
-import fs from "node:fs";
 
 export const NewDocumentFunction = DefineFunction({
   callback_id: "download_pdf",
@@ -7,65 +6,52 @@ export const NewDocumentFunction = DefineFunction({
   description: "Download reports into a PDF",
   source_file: "functions/NewDocumentFunction.ts",
   input_parameters: {
+    properties: {},
+    required: [],
+  },
+  output_parameters: {
     properties: {
-      channel_id: {
-        type: Schema.slack.types.channel_id,
-        description: "The channel id from where to get messages",
-      },
-      time_entries: {
+      doc_id: {
         type: Schema.types.string,
-        description: "Either a weekly, monthly or general report"
-      },
-      holidays: {
-        type: Schema.types.string,
-        description: "Either a weekly, monthly or general report"
-      },
-      user: {
-        type: Schema.slack.types.user_id,
-        description: "The user to collect time entries"
+        description: "ID of document created by Slack API"
       }
     },
     required: [],
   },
-  output_parameters: {
-    properties: {},
-    required: [],
-  },
 });
 
-export default SlackFunction(NewDocumentFunction, async({ /*inputs,*/ env }) => {
+export default SlackFunction(NewDocumentFunction, async({ env }) => {
   const endpoint = `https://api.signtime.com/api/v1/documents/new`;
-  // const endpoint = "https://api.signtime.com/api/v1/users";
   
   const headers = {
     authorization: "Bearer " + env.SIGNTIME_APIKEY,
-    // 'Content-Type': 'application/json',
   };
 
-  const body = new FormData();  
-  const filePath = "/Users/justinhong/Desktop/timecard-app/functions/templates/timecard_template.pdf";
-  const fileBuffer = fs.readFileSync(filePath);
-  const file = new Blob([fileBuffer], { type: 'application/pdf' });
+  //Dealing with the input template here
+  const filePath = String(env.TEMPLATE_FILEPATH);
+  const fileBuffer = Deno.readFileSync(filePath);
+  const file = new Blob([fileBuffer], { type: "application/pdf" });
 
+  const body = new FormData();  
   body.append("file", file, "timecard_template.pdf");
-  body.append("subject", "test data");
-  body.append("expires_at", "2025-02-21T01:20:49.042Z");
+  body.append("subject", "Created by Slack API");
+  body.append("expires_at", new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString());
   body.append("parties[][name]", "送信者");
-  body.append("parties[][email]", "hong.justin6@gmail.com.com");
+  body.append("parties[][email]", "hong.justin6@gmail.com");
   body.append("parties[][order]", "-1");
   
+  let doc_id = "";
   try
   {
     await fetch(endpoint, {
       method: "POST",
       headers,
       body,
+      redirect: "follow",
     }).then(async (res: Response) => {
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
         const jsonData = await res.json();
-        console.log(jsonData);
-        console.log(jsonData);
-        return jsonData;
+        doc_id = jsonData.id;
       }
       else {
         throw new Error(`${res.status}: ${res.statusText}`);
@@ -78,5 +64,5 @@ export default SlackFunction(NewDocumentFunction, async({ /*inputs,*/ env }) => 
     throw new Error(`An error was encountered - ${error.message}`);
   }
 
-  return { outputs: {} };
+  return { outputs: { doc_id: doc_id, } };
 });
