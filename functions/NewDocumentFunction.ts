@@ -1,9 +1,9 @@
 import { DefineFunction, SlackFunction, Schema } from "deno-slack-sdk/mod.ts";
 
 export const NewDocumentFunction = DefineFunction({
-  callback_id: "download_pdf",
-  title: "Download PDF",
-  description: "Download reports into a PDF",
+  callback_id: "new_document",
+  title: "New Document",
+  description: "Create a new template through SignTime API",
   source_file: "functions/NewDocumentFunction.ts",
   input_parameters: {
     properties: {},
