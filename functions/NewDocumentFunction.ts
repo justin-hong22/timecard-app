@@ -54,7 +54,7 @@ export default SlackFunction(NewDocumentFunction, async({ env }) => {
       body,
       redirect: "follow",
     }).then(async (res: Response) => {
-      if (res.status >= 200 && res.status < 300) {
+      if (res.status == 201) {
         const jsonData = await res.json();
         doc_id = jsonData.id;
         party_id = jsonData.parties[0].id;
