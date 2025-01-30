@@ -32,8 +32,7 @@ async function createComponent(headers: {Accept: string; Authorization : string}
       body,
     }).then(async (res: Response) => {
       if (res.status == 201) {
-        const jsonData = await res.json();
-        console.log(jsonData);
+        const _jsonData = await res.json();
       }
       else {
         throw new Error(`${res.status}: ${res.statusText}`);
