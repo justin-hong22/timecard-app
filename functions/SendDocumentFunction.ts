@@ -30,7 +30,6 @@ async function apiCallFunction(headers: {Accept: string; Authorization : string}
     }).then(async (res: Response) => {
       if (res.status == 201) {
         const _jsonData = await res.json();
-        console.log(_jsonData);
       }
       else {
         throw new Error(`${res.status}: ${res.statusText}`);
