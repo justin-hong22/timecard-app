@@ -54,5 +54,8 @@ export default SlackFunction(SendDocumentFunction, async({inputs, env}) =>
   const annotateEndpoint = `https://api.signtime.com/api/v1/documents/` + inputs.document_id + `/annotate`;
   await apiCallFunction(headers, annotateEndpoint);
   
+  const sendEnpoint = `https://api.signtime.com/api/v1/documents/` + inputs.document_id + `/send`;
+  await apiCallFunction(headers, sendEnpoint);
+
   return { outputs: {} }
 });
