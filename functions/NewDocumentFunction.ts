@@ -14,6 +14,10 @@ export const NewDocumentFunction = DefineFunction({
       doc_id: {
         type: Schema.types.string,
         description: "ID of document created by Slack API"
+      },
+      party_id: {
+        type: Schema.types.string,
+        description: "Party ID to set components"
       }
     },
     required: [],
@@ -41,6 +45,7 @@ export default SlackFunction(NewDocumentFunction, async({ env }) => {
   body.append("parties[][order]", "-1");
   
   let doc_id = "";
+  let party_id = "";
   try
   {
     await fetch(endpoint, {
@@ -52,6 +57,7 @@ export default SlackFunction(NewDocumentFunction, async({ env }) => {
       if (res.status >= 200 && res.status < 300) {
         const jsonData = await res.json();
         doc_id = jsonData.id;
+        party_id = jsonData.parties[0].id;
       }
       else {
         throw new Error(`${res.status}: ${res.statusText}`);
@@ -64,5 +70,5 @@ export default SlackFunction(NewDocumentFunction, async({ env }) => {
     throw new Error(`An error was encountered - ${error.message}`);
   }
 
-  return { outputs: { doc_id: doc_id, } };
+  return { outputs: { doc_id: doc_id, party_id: party_id, } };
 });
