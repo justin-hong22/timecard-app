@@ -82,7 +82,8 @@ export default SlackFunction(NewComponentFunction, async({inputs, env}) =>
   signatureBody.append("type", "SignatureComponent");
   signatureBody.append("page", "1");
   signatureBody.append("x", "0.13");
-  signatureBody.append("y", ".82");
+  signatureBody.append("y", ".83");
+  holidayBody.append("height", ".06");
   await createComponent(headers, signatureBody);
 
   const nameBody = new FormData();
