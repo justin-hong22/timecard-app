@@ -3,6 +3,7 @@ import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
 import { NewDocumentFunction } from "../functions/NewDocumentFunction.ts";
 import { NewComponentFunction } from "../functions/NewComponentFunction.ts";
+import { SendDocumentFunction } from "../functions/SendDocumentFunction.ts";
 
 const ReportWorkflow = DefineWorkflow({
   callback_id: "report_workflow",
@@ -64,6 +65,10 @@ const document = ReportWorkflow.addStep(NewDocumentFunction, {
 
 ReportWorkflow.addStep(NewComponentFunction, {
   party_id: document.outputs.party_id,
+});
+
+ReportWorkflow.addStep(SendDocumentFunction, {
+  document_id: document.outputs.doc_id,
 });
 
 

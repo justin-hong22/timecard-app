@@ -6,6 +6,7 @@ import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
 import { NewDocumentFunction } from "./functions/NewDocumentFunction.ts";
 import { NewComponentFunction } from "./functions/NewComponentFunction.ts";
+import { SendDocumentFunction } from "./functions/SendDocumentFunction.ts";
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
 import { TimeCardType } from "./types/TimeCardType.ts";
 
@@ -19,7 +20,8 @@ export default Manifest({
   description: "A blank template for building Slack apps with Deno",
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore],
-  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, NewDocumentFunction, NewComponentFunction],
+  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, NewDocumentFunction,
+    NewComponentFunction, SendDocumentFunction],
   workflows: [SaveTimeWorkflow, ReportWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com'],
