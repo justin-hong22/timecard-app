@@ -49,9 +49,4 @@ SaveTimeWorkflow.addStep(SaveTimeFunction, {
   name: inputForm.outputs.fields.name,
 });
 
-// SaveTimeWorkflow.addStep(Schema.slack.functions.SendMessage, {
-//   channel_id: inputForm.outputs.fields.channel,
-//   message: "",
-// });
-
 export default SaveTimeWorkflow;
