@@ -43,8 +43,14 @@ const report_type = ReportWorkflow.addStep(
           title: "Name",
           type: Schema.slack.types.user_id,
           default: ReportWorkflow.inputs.user_id,
+        },
+        {
+          name: "email",
+          title: "Email to send to for signature",
+          type: Schema.types.string,
+          default: "",
         }],
-        required: ['report_type', 'user']
+        required: ['report_type', 'user', 'email']
     },
   }
 );
@@ -57,11 +63,8 @@ const report = ReportWorkflow.addStep(CreateReportFunction, {
   user: report_type.outputs.fields.user,
 });
 
-//Calling the SignTime API here
 const document = ReportWorkflow.addStep(NewDocumentFunction, {
-  time_entries: report.outputs.table_string,
-  holidays: report.outputs.holidays,
-  user: report_type.outputs.fields.user,
+  signature_email: report_type.outputs.fields.email,
 });
 
 ReportWorkflow.addStep(NewComponentFunction, {

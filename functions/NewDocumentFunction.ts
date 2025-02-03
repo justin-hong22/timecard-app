@@ -6,8 +6,13 @@ export const NewDocumentFunction = DefineFunction({
   description: "Create a new template through SignTime API",
   source_file: "functions/NewDocumentFunction.ts",
   input_parameters: {
-    properties: {},
-    required: [],
+    properties: {
+      signature_email: {
+        type: Schema.types.string,
+        description: "Email to be sent to"
+      }
+    },
+    required: ['signature_email'],
   },
   output_parameters: {
     properties: {
@@ -24,8 +29,9 @@ export const NewDocumentFunction = DefineFunction({
   },
 });
 
-export default SlackFunction(NewDocumentFunction, async({ env }) => {
+export default SlackFunction(NewDocumentFunction, async({ inputs, env }) => {
   const endpoint = `https://api.signtime.com/api/v1/documents/new`;
+  const email = inputs.signature_email;
   
   const headers = {
     authorization: "Bearer " + env.SIGNTIME_APIKEY,
@@ -38,10 +44,10 @@ export default SlackFunction(NewDocumentFunction, async({ env }) => {
 
   const body = new FormData();  
   body.append("file", file, "timecard_template.pdf");
-  body.append("subject", "Created by Slack API");
+  body.append("subject", "Slack API Test");
   body.append("expires_at", new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString());
   body.append("parties[][name]", "送信者");
-  body.append("parties[][email]", "hong.justin6@gmail.com");
+  body.append("parties[][email]", email);
   body.append("parties[][order]", "-1");
   
   let doc_id = "";
