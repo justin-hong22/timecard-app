@@ -31,10 +31,7 @@ export default Manifest({
     "chat:write.public",
     "datastore:read",
     "datastore:write",
-    "channels:history",
-    "groups:history",
-    "mpim:history",
-    "im:history",
     "files:write",
+    "files:read",
   ],
 });

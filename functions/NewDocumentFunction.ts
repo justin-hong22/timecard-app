@@ -38,7 +38,8 @@ export default SlackFunction(NewDocumentFunction, async({ inputs, env }) => {
   };
 
   //Dealing with the input template here
-  const filePath = String(env.TEMPLATE_FILEPATH);
+  const moduleDir = new URL('.', import.meta.url).pathname;
+  const filePath = `${moduleDir}templates/timecard_template.pdf`;
   const fileBuffer = Deno.readFileSync(filePath);
   const file = new Blob([fileBuffer], { type: "application/pdf" });
 
