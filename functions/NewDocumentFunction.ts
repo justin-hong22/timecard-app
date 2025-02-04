@@ -37,10 +37,10 @@ export default SlackFunction(NewDocumentFunction, async({ inputs, env }) => {
     authorization: "Bearer " + env.SIGNTIME_APIKEY,
   };
 
-  //Dealing with the input template here
-  const moduleDir = new URL('.', import.meta.url).pathname;
-  const filePath = `${moduleDir}templates/timecard_template.pdf`;
-  const fileBuffer = Deno.readFileSync(filePath);
+  //Dealing with the input template here 
+  const fileUrl = "https://justin-hong22.github.io/timecard-app/functions/templates/timecard_template.pdf";
+  const response = await fetch(fileUrl);
+  const fileBuffer = await response.arrayBuffer();
   const file = new Blob([fileBuffer], { type: "application/pdf" });
 
   const body = new FormData();  

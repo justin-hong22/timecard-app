@@ -24,7 +24,7 @@ export default Manifest({
     NewComponentFunction, SendDocumentFunction],
   workflows: [SaveTimeWorkflow, ReportWorkflow],
   types: [TimeCardType],
-  outgoingDomains: ['api.signtime.com'],
+  outgoingDomains: ['api.signtime.com', 'justin-hong22.github.io'],
   botScopes: [
     "commands", 
     "chat:write", 
