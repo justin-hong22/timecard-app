@@ -65,12 +65,14 @@ function getDuration(duration : number)
 function isWithinTimeFrame(type : string, time : Date)
 {
   const now = new Date();
+  const jstTime = new Date(time.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  
   if(type == "Weekly") {
     const lastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-    return (time >= lastWeek && time <= now) ? true : false;
+    return (jstTime >= lastWeek && jstTime <= now) ? true : false;
   }
   else if(type == "Monthly") {
-    return (time.getMonth() == now.getMonth() && time.getFullYear() == now.getFullYear()) ? true : false;
+    return (jstTime.getMonth() == now.getMonth() && jstTime.getFullYear() == now.getFullYear()) ? true : false;
   }
 
   return false;

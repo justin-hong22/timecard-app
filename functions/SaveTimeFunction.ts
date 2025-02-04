@@ -60,7 +60,7 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   return { outputs: {} };
 });
 
-function findHoliday(input_date : Date)
+function findHoliday(date : Date)
 {
   function getVariableHolidays(year : number, month : number, week : number, weekday : number)
   {
@@ -84,6 +84,7 @@ function findHoliday(input_date : Date)
     ['11-23', 'Labor Thanksgiving Day'],
   ]);
 
+  const input_date =  new Date(date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   const input_year = input_date.getFullYear();
   holidays.set(getVariableHolidays(input_year, 0, 2, 1), 'Coming of Age Day');
   holidays.set(getVariableHolidays(input_year, 6, 3, 1), 'Marine Day');
