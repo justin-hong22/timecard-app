@@ -52,7 +52,7 @@ export default SlackFunction(SendDocumentFunction, async({inputs, env}) =>
     Authorization: "Bearer " + env.SIGNTIME_APIKEY,
   };
 
-  const doc_id = inputs.document_id;
+  const doc_id = String(inputs.document_id);
   await apiCallFunction(headers, doc_id, 'annotate');
   await apiCallFunction(headers, doc_id, 'send');
 
