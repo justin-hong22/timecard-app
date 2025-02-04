@@ -20,8 +20,10 @@ export const SendDocumentFunction = DefineFunction({
   }
 });
 
-async function apiCallFunction(headers: {Accept: string; Authorization : string}, endpoint : string)
+async function apiCallFunction(headers: {Accept: string; Authorization : string}, doc_id : string, call_type : string)
 {
+  const endpoint = `https://api.signtime.com/api/v1/documents/${doc_id}/${call_type}`;
+
   try
   {
     await fetch(endpoint, {
@@ -45,17 +47,14 @@ async function apiCallFunction(headers: {Accept: string; Authorization : string}
 
 export default SlackFunction(SendDocumentFunction, async({inputs, env}) => 
 {
-  const doc_id = String(inputs.document_id);
   const headers = {
     Accept: "application/json",
     Authorization: "Bearer " + env.SIGNTIME_APIKEY,
   };
 
-  const annotateEndpoint = `https://api.signtime.com/api/v1/documents/${doc_id}/annotate`;
-  await apiCallFunction(headers, annotateEndpoint);
-
-  const sendEnpoint = `https://api.signtime.com/api/v1/documents/${doc_id}/send`;
-  await apiCallFunction(headers, sendEnpoint);
+  const doc_id = inputs.document_id;
+  await apiCallFunction(headers, doc_id, 'annotate');
+  await apiCallFunction(headers, doc_id, 'send');
 
   return { outputs: {} }
 });
