@@ -12,7 +12,7 @@ export const SendDocumentFunction = DefineFunction({
         description: "id of the new document created in NewDocumentFunction"
       },
     },
-    required: [],
+    required: ['document_id'],
   },
   output_parameters: {
     properties: {},
@@ -45,15 +45,16 @@ async function apiCallFunction(headers: {Accept: string; Authorization : string}
 
 export default SlackFunction(SendDocumentFunction, async({inputs, env}) => 
 {
+  const doc_id = String(inputs.document_id);
   const headers = {
     Accept: "application/json",
     Authorization: "Bearer " + env.SIGNTIME_APIKEY,
   };
 
-  const annotateEndpoint = `https://api.signtime.com/api/v1/documents/` + inputs.document_id + `/annotate`;
+  const annotateEndpoint = `https://api.signtime.com/api/v1/documents/${doc_id}/annotate`;
   await apiCallFunction(headers, annotateEndpoint);
-  
-  const sendEnpoint = `https://api.signtime.com/api/v1/documents/` + inputs.document_id + `/send`;
+
+  const sendEnpoint = `https://api.signtime.com/api/v1/documents/${doc_id}/send`;
   await apiCallFunction(headers, sendEnpoint);
 
   return { outputs: {} }
