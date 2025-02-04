@@ -22,7 +22,7 @@ export const SendDocumentFunction = DefineFunction({
 
 async function apiCallFunction(headers: {Accept: string; Authorization : string}, doc_id : string, call_type : string)
 {
-  const endpoint = `https://api.signtime.com/api/v1/documents/${doc_id}/${call_type}`;
+  const endpoint = new URL(`https://api.signtime.com/api/v1/documents/${doc_id}/${call_type}`);
 
   try
   {
