@@ -49,7 +49,7 @@ export default SlackFunction(NewDocumentFunction, async({ inputs }) => {
 
   const body = new FormData();  
   body.append("file", file, "timecard_template.pdf");
-  body.append("subject", "New Component Test");
+  body.append("subject", "Slack API Test");
   body.append("expires_at", new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString());
   body.append("parties[][name]", "送信者");
   body.append("parties[][email]", email);
