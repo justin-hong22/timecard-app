@@ -4,6 +4,7 @@ import ReportWorkflow from "./workflows/ReportWorkflow.ts";
 import { SaveTimeFunction } from "./functions/SaveTimeFunction.ts";
 import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
+import { GetOAuthFunction } from "./functions/GetOAuthFunction.ts";
 import { NewDocumentFunction } from "./functions/NewDocumentFunction.ts";
 import { NewComponentFunction } from "./functions/NewComponentFunction.ts";
 import { SendDocumentFunction } from "./functions/SendDocumentFunction.ts";
@@ -21,7 +22,7 @@ export default Manifest({
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore],
   functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, NewDocumentFunction,
-    NewComponentFunction, SendDocumentFunction],
+    NewComponentFunction, SendDocumentFunction, GetOAuthFunction],
   workflows: [SaveTimeWorkflow, ReportWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com', 'justin-hong22.github.io'],

@@ -7,12 +7,16 @@ export const NewDocumentFunction = DefineFunction({
   source_file: "functions/NewDocumentFunction.ts",
   input_parameters: {
     properties: {
+      api_key: {
+        type: Schema.types.string,
+        description: "SignTime API key"
+      },
       signature_email: {
         type: Schema.types.string,
         description: "Email to be sent to"
       }
     },
-    required: ['signature_email'],
+    required: ['api_key', 'signature_email'],
   },
   output_parameters: {
     properties: {
@@ -29,12 +33,12 @@ export const NewDocumentFunction = DefineFunction({
   },
 });
 
-export default SlackFunction(NewDocumentFunction, async({ inputs, env }) => {
+export default SlackFunction(NewDocumentFunction, async({ inputs }) => {
   const endpoint = `https://api.signtime.com/api/v1/documents/new`;
   const email = inputs.signature_email;
   
   const headers = {
-    authorization: "Bearer " + env.SIGNTIME_APIKEY,
+    authorization: "Bearer " + String(inputs.api_key),
   };
 
   //Dealing with the input template here 
@@ -45,7 +49,7 @@ export default SlackFunction(NewDocumentFunction, async({ inputs, env }) => {
 
   const body = new FormData();  
   body.append("file", file, "timecard_template.pdf");
-  body.append("subject", "Slack API Test");
+  body.append("subject", "New Component Test");
   body.append("expires_at", new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString());
   body.append("parties[][name]", "送信者");
   body.append("parties[][email]", email);

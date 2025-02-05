@@ -7,12 +7,16 @@ export const SendDocumentFunction = DefineFunction({
   source_file: "functions/SendDocumentFunction.ts",
   input_parameters: {
     properties: {
+      api_key: {
+        type: Schema.types.string,
+        description: "SignTime API key"
+      },
       document_id: {
         type: Schema.types.string,
         description: "id of the new document created in NewDocumentFunction"
       },
     },
-    required: ['document_id'],
+    required: ['api_key', 'document_id'],
   },
   output_parameters: {
     properties: {},
@@ -46,11 +50,11 @@ async function apiCallFunction(headers: {Accept: string; Authorization : string}
   }
 }
 
-export default SlackFunction(SendDocumentFunction, async({inputs, env}) => 
+export default SlackFunction(SendDocumentFunction, async({inputs}) => 
 {
   const headers = {
     Accept: "application/json",
-    Authorization: "Bearer " + env.SIGNTIME_APIKEY,
+    Authorization: "Bearer " + String(inputs.api_key),
   };
 
   const doc_id = String(inputs.document_id).trim();

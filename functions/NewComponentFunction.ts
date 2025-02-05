@@ -7,12 +7,16 @@ export const NewComponentFunction = DefineFunction({
   source_file: "functions/NewComponentFunction.ts",
   input_parameters: {
     properties: {
+      api_key: {
+        type: Schema.types.string,
+        description: "SignTime API key"
+      },
       party_id: {
         type: Schema.types.string,
         description: "party id of new document"
       },
     },
-    required: [],
+    required: ['api_key', 'party_id'],
   },
   output_parameters: {
     properties: {},
@@ -48,11 +52,11 @@ async function createComponent(headers: {Accept: string; Authorization : string}
   return "";
 }
 
-export default SlackFunction(NewComponentFunction, async({inputs, env}) => 
+export default SlackFunction(NewComponentFunction, async({inputs}) => 
 {
   const headers = {
     Accept: "application/json",
-    Authorization: "Bearer " + env.SIGNTIME_APIKEY,
+    Authorization: "Bearer " + String(inputs.api_key),
   };
 
   const timeEntryBody = new FormData();
