@@ -24,24 +24,22 @@ export const SendDocumentFunction = DefineFunction({
   }
 });
 
-async function apiCallFunction(headers: {Accept: string; Authorization : string}, doc_id : string, call_type : string)
+async function apiCallFunction(headers: {Accept: string; Authorization : string; "Content-Type": string}, doc_id : string, call_type : string)
 {
   const endpoint = new URL(`${doc_id}/${call_type}`, "https://api.signtime.com/api/v1/documents/");
   console.log("endpoint = " + endpoint);
 
   try
   {
-    await fetch(endpoint, {
-      method: "POST",
-      headers,
-    }).then(async (res: Response) => {
-      if (res.status == 201) {
-        const _jsonData = await res.json();
-      }
-      else {
-        throw new Error(`${res.status}: ${res.statusText}`);
-     }
-    });
+    const res = await fetch(endpoint, {method: "POST", headers});
+    const text = await res.text();
+
+    if (res.status !== 201) 
+    {
+      console.log(`Res Status = ${res.status}`);
+      console.log("Response Body = ", text);
+      throw new Error(`Failed API Call: ${res.status} - ${res.statusText} - ${text}`);
+    }
   }
   catch(error)
   {
@@ -55,6 +53,7 @@ export default SlackFunction(SendDocumentFunction, async({inputs}) =>
   const headers = {
     Accept: "application/json",
     Authorization: "Bearer " + String(inputs.api_key),
+    "Content-Type": "application/json",
   };
 
   const doc_id = String(inputs.document_id).trim();
