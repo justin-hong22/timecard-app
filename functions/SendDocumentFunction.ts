@@ -35,9 +35,9 @@ async function apiCallFunction(headers: {Accept: string; Authorization : string;
     const res = await fetch(endpoint, {method: "POST", headers});
     const text = await res.text();
 
+    console.log(`Res Status = ${res.status}\n`);
     if (res.status !== 201) 
     {
-      console.log(`Res Status = ${res.status}`);
       console.log("Response Body = ", text);
       throw new Error(`Failed API Call: ${res.status} - ${res.statusText} - ${text}`);
     }
