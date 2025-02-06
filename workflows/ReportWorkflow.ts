@@ -2,9 +2,6 @@ import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
 import { GetOAuthFunction } from "../functions/GetOAuthFunction.ts";
-// import { NewDocumentFunction } from "../functions/NewDocumentFunction.ts";
-// import { NewComponentFunction } from "../functions/NewComponentFunction.ts";
-// import { SendDocumentFunction } from "../functions/SendDocumentFunction.ts";
 import { TemplateSenderFunction } from "../functions/TemplateSenderFunction.ts";
 
 const ReportWorkflow = DefineWorkflow({
@@ -72,21 +69,6 @@ ReportWorkflow.addStep(TemplateSenderFunction, {
   api_key: api_key.outputs.api_key,
   signature_email: report_type.outputs.fields.email,
 });
-
-// const document = ReportWorkflow.addStep(NewDocumentFunction, {
-//   api_key: api_key.outputs.api_key,
-//   signature_email: report_type.outputs.fields.email,
-// });
-
-// ReportWorkflow.addStep(NewComponentFunction, {
-//   api_key: api_key.outputs.api_key,
-//   party_id: document.outputs.party_id,
-// });
-
-// ReportWorkflow.addStep(SendDocumentFunction, {
-//   api_key: api_key.outputs.api_key,
-//   document_id: document.outputs.doc_id,
-// });
 
 ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: ReportWorkflow.inputs.channel,
