@@ -55,7 +55,7 @@ export default SlackFunction(SendDocumentFunction, async({inputs}) =>
     Accept: "application/json",
     Authorization: "Bearer " + String(inputs.api_key),
     "Content-Type": "application/json",
-    "User-Agent": "SlackApp/1.0",
+    "User-Agent": "PostmanRuntime/7.29.0",
   };
 
   const doc_id = String(inputs.document_id).trim();
