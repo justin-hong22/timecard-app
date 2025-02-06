@@ -24,7 +24,8 @@ export const SendDocumentFunction = DefineFunction({
   }
 });
 
-async function apiCallFunction(headers: {Accept: string; Authorization : string; "Content-Type": string}, doc_id : string, call_type : string)
+async function apiCallFunction(headers: {Accept: string; Authorization : string; "Content-Type": string, "User-Agent" : string}, 
+  doc_id : string, call_type : string)
 {
   const endpoint = new URL(`${doc_id}/${call_type}`, "https://api.signtime.com/api/v1/documents/");
   console.log("endpoint = " + endpoint);
@@ -54,6 +55,7 @@ export default SlackFunction(SendDocumentFunction, async({inputs}) =>
     Accept: "application/json",
     Authorization: "Bearer " + String(inputs.api_key),
     "Content-Type": "application/json",
+    "User-Agent": "SlackApp/1.0",
   };
 
   const doc_id = String(inputs.document_id).trim();
