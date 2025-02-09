@@ -22,7 +22,7 @@ export default Manifest({
   functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, TemplateSenderFunction],
   workflows: [SaveTimeWorkflow, ReportWorkflow],
   types: [TimeCardType],
-  outgoingDomains: ['api.signtime.com', 'justin-hong22.github.io'],
+  outgoingDomains: ['api.signtime.com'],
   botScopes: [
     "commands", 
     "chat:write", 
