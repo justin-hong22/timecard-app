@@ -64,7 +64,8 @@ function getDuration(duration : number)
 
 function isWithinTimeFrame(type : string, time : Date)
 {
-  const now = new Date();
+  let now = new Date();
+  now = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   const jstTime = new Date(time.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   
   if(type == "Weekly") {
