@@ -54,7 +54,6 @@ export default SlackFunction(CollectTimeFunction, async ({ client }) => {
     });
   });
 
-  console.log(time_entries);
   return{
     outputs: { time_entries: [...time_entries.entries()].map((r) => r[1]) } 
   };
