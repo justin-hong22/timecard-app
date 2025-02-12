@@ -27,6 +27,12 @@ const report_type = ReportWorkflow.addStep(
     fields: {
       elements: [
         {
+          name: "user",
+          title: "Name",
+          type: Schema.slack.types.user_id,
+          default: ReportWorkflow.inputs.user_id,
+        },
+        {
           name: "report_type",
           title: 'What type of report would you like to make?',
           description: "Either weekly or monthly report to be generated",
@@ -36,20 +42,8 @@ const report_type = ReportWorkflow.addStep(
             "Monthly",
             "General",
           ],
-        },
-        {
-          name: "user",
-          title: "Name",
-          type: Schema.slack.types.user_id,
-          default: ReportWorkflow.inputs.user_id,
-        },
-        {
-          name: "email",
-          title: "Email to send to for signature",
-          type: Schema.types.string,
-          default: "",
         }],
-        required: ['report_type', 'user', 'email']
+        required: ['user', 'report_type']
     },
   }
 );

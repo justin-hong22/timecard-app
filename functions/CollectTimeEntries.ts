@@ -31,27 +31,30 @@ export default SlackFunction(CollectTimeFunction, async ({ client }) => {
   
   const time_entries = new Map<typeof String, {
     id: string;
+    person_name: string;
     time_in: string;
     time_out: string;
     duration: number;
-    is_holiday: boolean;
+    lunch_break: boolean;
     holiday_name: string;
-    person_name: string;
+    comments: string;
   }>();
 
   time_info.items.forEach((entry) => 
   {
     time_entries.set(entry.id, {
       id: String(entry.id),
+      person_name: String(entry.person_name),
       time_in: String(entry.time_in),
       time_out: String(entry.time_out),
       duration: Number(entry.duration),
-      is_holiday: Boolean(entry.is_holiday),
+      lunch_break: Boolean(entry.lunch_break),
       holiday_name: String(entry.holiday_name),
-      person_name: String(entry.person_name),
+      comments: String(entry.comments),
     });
   });
 
+  console.log(time_entries);
   return{
     outputs: { time_entries: [...time_entries.entries()].map((r) => r[1]) } 
   };

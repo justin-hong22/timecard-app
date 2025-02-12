@@ -7,12 +7,13 @@ export const TimeCardType = DefineType({
   type: Schema.types.object,
   properties: {
     id: {type: Schema.types.string},
+    person_name: {type: Schema.types.string},
     time_in: {type: Schema.types.string},
     time_out: {type: Schema.types.string},
     duration: {type: Schema.types.number},
-    is_holiday: {type: Schema.types.boolean},
+    lunch_break: {type: Schema.types.boolean},
     holiday_name: {type: Schema.types.string},
-    person_name: {type: Schema.types.string},
+    comments: {type: Schema.types.string},
   },
-  required: ['id', 'time_in', 'time_out', 'duration', 'is_holiday', 'holiday_name'],
+  required: ['id', 'person_name', 'time_in', 'time_out', 'duration', 'lunch_break', 'holiday_name'],
 });
