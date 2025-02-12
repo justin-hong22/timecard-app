@@ -22,7 +22,14 @@ const inputForm = SaveTimeWorkflow.addStep(
     interactivity: SaveTimeWorkflow.inputs.interactivity,
     submit_label: "Submit Info",
     fields: {
-      elements: [{
+      elements: [
+      {
+        name: "name",
+        title: "Name",
+        type: Schema.slack.types.user_id,
+        default: SaveTimeWorkflow.inputs.user_id,
+      },
+      {
         name: "time_in",
         title: "Time In",
         type: Schema.slack.types.timestamp,
@@ -33,12 +40,18 @@ const inputForm = SaveTimeWorkflow.addStep(
         type: Schema.slack.types.timestamp,
       },
       {
-        name: "name",
-        title: "Name",
-        type: Schema.slack.types.user_id,
-        default: SaveTimeWorkflow.inputs.user_id,
-      }],
-      required: ['time_in', 'time_out', 'name']
+        name: "lunch_break",
+        title: "Did you take a lunch break?",
+        type: Schema.types.boolean,
+      },
+      {
+        name: "comments",
+        title: "Comments",
+        type: Schema.types.string,
+        long: true
+      }
+      ],
+      required: ['name', 'time_in', 'time_out', 'lunch_break']
     },
   }
 );
@@ -46,7 +59,9 @@ const inputForm = SaveTimeWorkflow.addStep(
 SaveTimeWorkflow.addStep(SaveTimeFunction, {
   time_in: inputForm.outputs.fields.time_in,
   time_out: inputForm.outputs.fields.time_out,
+  lunch_break: inputForm.outputs.fields.lunch_break,
   name: inputForm.outputs.fields.name,
+  comments: inputForm.outputs.fields.comments,
 });
 
 SaveTimeWorkflow.addStep(Schema.slack.functions.SendMessage, {

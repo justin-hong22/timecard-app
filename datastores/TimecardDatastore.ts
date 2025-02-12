@@ -9,6 +9,9 @@ const TimecardDatastore = DefineDatastore({
     id: {
       type: Schema.types.string,
     },
+    person_name: {
+      type: Schema.slack.types.user_id,
+    },
     time_in: {
       type: Schema.types.string,
     },
@@ -18,14 +21,14 @@ const TimecardDatastore = DefineDatastore({
     duration: {
       type: Schema.types.number,
     },
-    is_holiday: {
+    lunch_break: {
       type: Schema.types.boolean,
     },
     holiday_name: {
       type: Schema.types.string,
     },
-    person_name: {
-      type: Schema.slack.types.user_id,
+    comments: {
+      type: Schema.types.string,
     }
   }
 });

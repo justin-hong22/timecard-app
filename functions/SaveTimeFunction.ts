@@ -16,12 +16,20 @@ export const SaveTimeFunction = DefineFunction({
         type: Schema.types.string,
         description: "Clocked out time",
       },
+      lunch_break: {
+        type: Schema.types.boolean,
+        description: "Boolean to determine if a lunch break was taken. Defaults to 60 minutes",
+      },
       name: {
         type: Schema.types.string,
         description: "The person who entered time",
-      }
+      },
+      comments: {
+        type: Schema.types.string,
+        description: "Any comments the person has",
+      },
     },
-    required: [],
+    required: ['time_in', 'time_out', 'lunch_break', 'name'],
   },
   output_parameters: {
     properties: {},
@@ -30,25 +38,26 @@ export const SaveTimeFunction = DefineFunction({
 });
 
 export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
-  const {time_in, time_out, name} = inputs;
+  const {name, time_in, time_out, lunch_break, comments} = inputs;
   
   const date_in = new Date(Number(time_in) * 1000);
   const date_out = new Date(Number(time_out) * 1000);
-  const duration = (date_out.getTime() - date_in.getTime()) / 3600000;
+  const duration = lunch_break ? (date_out.getTime() - date_in.getTime() - 3600000) / 3600000 : 
+    (date_out.getTime() - date_in.getTime()) / 3600000;
   const holiday_name = findHoliday(date_in);
-  const is_holiday = (holiday_name == null) ? false : true;
 
   const uuid = crypto.randomUUID();
   const putResponse = await client.apps.datastore.put({
     datastore: TIMECARD_DATASTORE,
     item: {
       id: uuid,
+      person_name: name,
       time_in: date_in,
       time_out: date_out,
       duration: duration,
-      is_holiday: is_holiday,
+      lunch_break: lunch_break,
       holiday_name: holiday_name,
-      person_name: name,
+      comments: comments,
     }
   });
 
