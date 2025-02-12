@@ -68,13 +68,13 @@ ReportWorkflow.addStep(TemplateSenderFunction, {
   comments: report.outputs.comments,
 });
 
-// ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
-//   channel_id: ReportWorkflow.inputs.channel,
-//   message: 
-//     `Inputted time entries so far for <@${report_type.outputs.fields.user}>\n` +
-//     `${report.outputs.table_string}\n\n` +
-//     `Holidays Passed: ${report.outputs.holidays}\n\n` + 
-//     `Comments:\n${report.outputs.comments}`,
-// });
+ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
+  channel_id: ReportWorkflow.inputs.channel,
+  message: 
+    `Inputted time entries so far for <@${report_type.outputs.fields.user}>\n` +
+    `${report.outputs.table_string}\n\n` +
+    `Holidays Passed: ${report.outputs.holidays}\n\n` + 
+    `Comments:\n${report.outputs.comments}`,
+});
 
 export default ReportWorkflow;
