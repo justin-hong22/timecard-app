@@ -61,7 +61,11 @@ const api_key = ReportWorkflow.addStep(GetOAuthFunction, {});
 
 ReportWorkflow.addStep(TemplateSenderFunction, {
   api_key: api_key.outputs.api_key,
-  signature_email: report_type.outputs.fields.email,
+  user: report_type.outputs.fields.user,
+  report_type: report_type.outputs.fields.report_type,
+  time_data: report.outputs.signtime_string,
+  holidays: report.outputs.holidays,
+  comments: report.outputs.comments,
 });
 
 ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
@@ -69,8 +73,8 @@ ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
   message: 
     `Inputted time entries so far for <@${report_type.outputs.fields.user}>\n` +
     `${report.outputs.table_string}\n\n` +
-    `${report.outputs.holidays}\n\n` + 
-    `${report.outputs.comments}`,
+    `Holidays Passed: ${report.outputs.holidays}\n\n` + 
+    `Comments:\n${report.outputs.comments}`,
 });
 
 export default ReportWorkflow;

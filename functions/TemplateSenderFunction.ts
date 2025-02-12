@@ -11,12 +11,28 @@ export const TemplateSenderFunction = DefineFunction({
         type: Schema.types.string,
         description: "SignTime API key"
       },
-      signature_email: {
+      user: {
+        type: Schema.slack.types.user_id,
+        description: "The user to collect time entries"
+      },
+      report_type: {
         type: Schema.types.string,
-        description: "Email to be sent to"
-      }
+        description: "Either a weekly, monthly or general report"
+      },
+      time_data: {
+        type: Schema.types.string,
+        description: "time entries inputted"
+      },
+      holidays: {
+        type: Schema.types.string,
+        description: "List the holidays if any"
+      },
+      comments: {
+        type: Schema.types.string,
+        description: "List the comments if any"
+      },
     },
-    required: ['api_key', 'signature_email'],
+    required: ['api_key', 'user', 'report_type', 'time_data', 'holidays', 'comments'],
   },
   output_parameters: {
     properties: {},
@@ -27,20 +43,28 @@ export const TemplateSenderFunction = DefineFunction({
 export default SlackFunction(TemplateSenderFunction, async({inputs, env}) => {
   const template_id = String(env.TEMPLATE_ID).trim();
   const api_key = String(inputs.api_key);
-  const email = inputs.signature_email;
-  const endpoint = new URL(`${template_id}/launch`, "https://api.signtime.com/api/v1/templates/");
+  const user_id = String(inputs.user);
+  const report_type = String(inputs.report_type);
+  const time_data = String(inputs.time_data);
+  const holidays = String(inputs.holidays).replace(/,/g, " &");
+  const comments = String(inputs.comments);
+  const email = "hong.justin6@gmail.com";
 
+  const endpoint = new URL(`${template_id}/launch`, "https://api.signtime.com/api/v1/templates/");
   const headers = {
     accept: "application/json",
     authorization: "Bearer " + api_key,
   };
 
+  const fields_value = `Some Woman, ${report_type}, ${time_data}, ${holidays}, ${comments}`;
   const body = new FormData();
   body.append("id", template_id);
-  body.append("subject", "Slack API Template Launch Test");
+  body.append("subject", "Slack API Template Test <NEW APPROACH>");
   body.append("parties[label]", "sender");
   body.append("parties[name]", "送信者");
   body.append("parties[email]", email);
+  body.append("merge_fields[name]", "name, report_type, time_entries, holidays, comments");
+  body.append("merge_fields[value]", fields_value);  
 
   try
   {

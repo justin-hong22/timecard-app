@@ -30,7 +30,10 @@ export const CreateReportFunction = DefineFunction({
         type: Schema.types.string,
         description: "Table that holds the time entries"
       },
-
+      signtime_string: {
+        type: Schema.types.string,
+        description: "Time entries to send via SignTime API"
+      },
       holidays: {
         type: Schema.types.string,
         description: "List the holidays if any"
@@ -38,9 +41,9 @@ export const CreateReportFunction = DefineFunction({
       comments: {
         type: Schema.types.string,
         description: "List the comments if any"
-      }
+      },
     },
-    required: ['table_string', 'holidays', 'comments'],
+    required: ['table_string', 'signtime_string', 'holidays', 'comments'],
   },
 });
 
@@ -98,7 +101,8 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
   else if (type == "Monthly") { table += "Monthly Report\n\n" }
   else { table += "General Report\n\n" }
 
-  table += column1.padEnd(30, ' ') + column2.padEnd(30, ' ') + column3.padEnd(20, ' ') + column4 + "\n";
+  table += column1.padEnd(32, ' ') + column2.padEnd(33, ' ') + column3.padEnd(21, ' ') + column4 + "\n";
+  let signtime_string = "";
   let holidays = "";
   let comments = "";
   
@@ -106,8 +110,8 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
   {
     if(entries[i].person_name == user)
     {
-      const time_in = formatTime(entries[i].time_in) + ' '.repeat(13);
-      const time_out = formatTime(entries[i].time_out) + ' '.repeat(13);
+      const time_in = formatTime(entries[i].time_in).replace(",", " @") + ' '.repeat(14);
+      const time_out = formatTime(entries[i].time_out).replace(",", " @") + ' '.repeat(15);
       const duration = getDuration(Number(entries[i].duration));
       const lunch_break = entries[i].lunch_break ? "Yes" : "No";
 
@@ -115,8 +119,9 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
         (type == "Monthly" && isWithinTimeFrame("Monthly", new Date(entries[i].time_in))) ||
         (type == "General"))
       {
-        const row = `${time_in}${time_out}${lunch_break.padEnd(20, ' ')}${duration.hours} hours, ${duration.minutes} minutes\n`;
+        const row = `${time_in}${time_out}${lunch_break.padEnd(21, ' ')}${duration.hours} hours & ${duration.minutes} minutes\n`;
         table += row;
+        signtime_string += row;
 
         const holiday = entries[i].holiday_name;
         if(holiday != "undefined") {
@@ -132,11 +137,12 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
   }
 
   table += "\`\`\`";
-  holidays = (holidays != "") ? "Holidays passed: " + holidays.slice(0, -2) : "No national holidays were included";
-  comments = (comments != "") ? "Comments:\n" + comments : "No comments were mentioned";
+  holidays = (holidays != "") ? holidays.slice(0, -2) : "No national holidays were included";
+  comments = (comments != "") ? comments : "No comments were mentioned";
   return {
     outputs: {
       table_string: table,
+      signtime_string: signtime_string,
       holidays: holidays,
       comments: comments,
     }
