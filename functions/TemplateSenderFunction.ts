@@ -1,4 +1,5 @@
 import { DefineFunction, SlackFunction, Schema } from "deno-slack-sdk/mod.ts";
+import { SlackAPIClient } from "deno-slack-api/types.ts";
 
 export const TemplateSenderFunction = DefineFunction({
   callback_id: "template_sender",
@@ -40,15 +41,26 @@ export const TemplateSenderFunction = DefineFunction({
   }
 });
 
-export default SlackFunction(TemplateSenderFunction, async({inputs, env}) => {
+async function getUserInfo(client : SlackAPIClient, user_id: string)
+{
+  const user_info = await client.users.info({user: user_id});
+  const name = user_info.user.real_name;
+  const email = user_info.user.profile.email;
+
+  return {name: name, email: email}
+}
+
+export default SlackFunction(TemplateSenderFunction, async({inputs, env, client}) => {
   const template_id = String(env.TEMPLATE_ID).trim();
   const api_key = String(inputs.api_key);
-  const user_id = String(inputs.user);
   const report_type = String(inputs.report_type);
   const time_data = String(inputs.time_data);
   const holidays = String(inputs.holidays).replace(/,/g, " &");
   const comments = String(inputs.comments);
-  const email = "hong.justin6@gmail.com";
+
+  const user_info = await getUserInfo(client, String(inputs.user));
+  const name = user_info.name;
+  const email = user_info.email;
 
   const endpoint = new URL(`${template_id}/launch`, "https://api.signtime.com/api/v1/templates/");
   const headers = {
@@ -56,7 +68,7 @@ export default SlackFunction(TemplateSenderFunction, async({inputs, env}) => {
     authorization: "Bearer " + api_key,
   };
 
-  const fields_value = `Some Woman, ${report_type}, ${time_data}, ${holidays}, ${comments}`;
+  const fields_value = `${name}, ${report_type}, ${time_data}, ${holidays}, ${comments}`;
   const body = new FormData();
   body.append("id", template_id);
   body.append("subject", "Slack API Template Test <NEW APPROACH>");

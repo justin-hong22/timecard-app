@@ -31,5 +31,7 @@ export default Manifest({
     "datastore:write",
     "files:write",
     "files:read",
+    "users:read",
+    "users:read.email",
   ],
 });
