@@ -98,7 +98,7 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
   else if (type == "Monthly") { table += "Monthly Report\n\n" }
   else { table += "General Report\n\n" }
 
-  table += column1.padEnd(27, ' ') + column2.padEnd(27, ' ') + column3.padEnd(15, ' ') + column4 + "\n";
+  table += column1.padEnd(30, ' ') + column2.padEnd(30, ' ') + column3.padEnd(20, ' ') + column4 + "\n";
   let holidays = "";
   let comments = "";
   
@@ -106,16 +106,16 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
   {
     if(entries[i].person_name == user)
     {
-      const time_in = formatTime(entries[i].time_in) + ' '.repeat(10);
-      const time_out = formatTime(entries[i].time_out) + ' '.repeat(10);
+      const time_in = formatTime(entries[i].time_in) + ' '.repeat(13);
+      const time_out = formatTime(entries[i].time_out) + ' '.repeat(13);
       const duration = getDuration(Number(entries[i].duration));
-      const lunch_break = entries[i].lunch_break ? "Yes".padEnd(15, ' ') : "No".padEnd(15, ' ');
+      const lunch_break = entries[i].lunch_break ? "Yes" : "No";
 
       if((type == "Weekly" && isWithinTimeFrame("Weekly", new Date(entries[i].time_in))) || 
         (type == "Monthly" && isWithinTimeFrame("Monthly", new Date(entries[i].time_in))) ||
         (type == "General"))
       {
-        const row = `${time_in}${time_out}${lunch_break}${duration.hours} hours, ${duration.minutes} minutes\n`;
+        const row = `${time_in}${time_out}${lunch_break.padEnd(20, ' ')}${duration.hours} hours, ${duration.minutes} minutes\n`;
         table += row;
 
         const holiday = entries[i].holiday_name;
