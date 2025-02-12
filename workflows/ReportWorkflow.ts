@@ -51,9 +51,9 @@ const report_type = ReportWorkflow.addStep(
 const time_entries = ReportWorkflow.addStep(CollectTimeFunction, {});
 
 const report = ReportWorkflow.addStep(CreateReportFunction, {
-  time_entries: time_entries.outputs.time_entries,
-  report_type: report_type.outputs.fields.report_type,
   user: report_type.outputs.fields.user,
+  report_type: report_type.outputs.fields.report_type,
+  time_entries: time_entries.outputs.time_entries,
 });
 
 //SignTime API Begins here
@@ -69,7 +69,8 @@ ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
   message: 
     `Inputted time entries so far for <@${report_type.outputs.fields.user}>\n` +
     `${report.outputs.table_string}\n\n` +
-    `${report.outputs.holidays}`,
+    `${report.outputs.holidays}\n\n` + 
+    `${report.outputs.comments}`,
 });
 
 export default ReportWorkflow;

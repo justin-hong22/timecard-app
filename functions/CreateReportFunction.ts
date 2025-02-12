@@ -8,22 +8,21 @@ export const CreateReportFunction = DefineFunction({
   source_file: "functions/CreateReportFunction.ts",
   input_parameters: {
     properties: {
-      time_entries: {
-        type: Schema.types.array,
-        items: { type: TimeCardType },
-        description: "Each individual time entry of a user",
+      user: {
+        type: Schema.slack.types.user_id,
+        description: "The user to collect time entries"
       },
       report_type: {
         type: Schema.types.string,
         description: "Either a weekly, monthly or general report"
       },
-      user: {
-        type: Schema.slack.types.user_id,
-        description: "The user to collect time entries"
-      }
+      time_entries: {
+        type: Schema.types.array,
+        items: { type: TimeCardType },
+        description: "Each individual time entry of a user",
+      },
     },
-
-    required: ['time_entries', 'report_type'],
+    required: ['user', 'report_type', 'time_entries'],
   },
   output_parameters: {
     properties: {
@@ -36,8 +35,12 @@ export const CreateReportFunction = DefineFunction({
         type: Schema.types.string,
         description: "List the holidays if any"
       },
+      comments: {
+        type: Schema.types.string,
+        description: "List the comments if any"
+      }
     },
-    required: ['table_string'],
+    required: ['table_string', 'holidays', 'comments'],
   },
 });
 
@@ -87,34 +90,42 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
 
   const column1 = "Time In";
   const column2 = "Time Out";
-  const column3 = "Duration";
+  const column3 = "Lunch?";
+  const column4 = "Duration";
   
   let table = "\`\`\`";
   if(type == "Weekly") { table += "Weekly Report\n\n" }
   else if (type == "Monthly") { table += "Monthly Report\n\n" }
   else { table += "General Report\n\n" }
 
-  table += column1.padEnd(27, ' ') + column2.padEnd(27, ' ') + column3 + "\n";
+  table += column1.padEnd(27, ' ') + column2.padEnd(27, ' ') + column3.padEnd(15, ' ') + column4 + "\n";
   let holidays = "";
+  let comments = "";
   
   for(let i = 0; i < entries.length; i++) 
   {
     if(entries[i].person_name == user)
     {
-      const time_in = formatTime(entries[i].time_in);
-      const time_out = formatTime(entries[i].time_out);
+      const time_in = formatTime(entries[i].time_in) + ' '.repeat(10);
+      const time_out = formatTime(entries[i].time_out) + ' '.repeat(10);
       const duration = getDuration(Number(entries[i].duration));
+      const lunch_break = entries[i].lunch_break ? "Yes".padEnd(15, ' ') : "No".padEnd(15, ' ');
 
       if((type == "Weekly" && isWithinTimeFrame("Weekly", new Date(entries[i].time_in))) || 
         (type == "Monthly" && isWithinTimeFrame("Monthly", new Date(entries[i].time_in))) ||
         (type == "General"))
       {
-        const row = `${time_in + ' '.repeat(10)}${time_out + ' '.repeat(10)}${duration.hours} hours, ${duration.minutes} minutes\n`;
+        const row = `${time_in}${time_out}${lunch_break}${duration.hours} hours, ${duration.minutes} minutes\n`;
         table += row;
 
         const holiday = entries[i].holiday_name;
         if(holiday != "undefined") {
           holidays += holiday + ", ";
+        }
+
+        const comment = entries[i].comments;
+        if(comment != "undefined") {
+          comments += `${time_in}`.substring(0,10) + `: ${comment}\n`;
         }
       }
     }
@@ -122,11 +133,12 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
 
   table += "\`\`\`";
   holidays = (holidays != "") ? "Holidays passed: " + holidays.slice(0, -2) : "No national holidays were included";
-
+  comments = (comments != "") ? "Comments:\n" + comments : "No comments were mentioned";
   return {
     outputs: {
       table_string: table,
       holidays: holidays,
+      comments: comments,
     }
   }
 });
