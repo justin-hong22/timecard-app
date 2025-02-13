@@ -37,12 +37,14 @@ const inputForm = SaveTimeWorkflow.addStep(
       {
         name: "time_out",
         title: "Time Out",
+        description: "If left blank, default is 9 hours from Time In",
         type: Schema.slack.types.timestamp,
       },
       {
         name: "lunch_break",
         title: "Did you take a lunch break?",
         type: Schema.types.boolean,
+        default: true,
       },
       {
         name: "comments",
@@ -51,7 +53,7 @@ const inputForm = SaveTimeWorkflow.addStep(
         long: true
       }
       ],
-      required: ['name', 'time_in', 'time_out', 'lunch_break']
+      required: ['name', 'time_in', 'lunch_break']
     },
   }
 );
