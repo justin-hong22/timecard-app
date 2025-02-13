@@ -71,7 +71,7 @@ export default SlackFunction(TemplateSenderFunction, async({inputs, env, client}
   const fields_value = `${name}, ${report_type}, ${time_data}, ${holidays}, ${comments}`;
   const body = new FormData();
   body.append("id", template_id);
-  body.append("subject", "Slack API Template Test <NEW APPROACH>");
+  body.append("subject", "Slack API Template Test"); //CHANGE ME
   body.append("parties[label]", "sender");
   body.append("parties[name]", "送信者");
   body.append("parties[email]", email);
