@@ -15,7 +15,7 @@ const DailyReminderWorkflow = DefineWorkflow({
 DailyReminderWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: DailyReminderWorkflow.inputs.channel,
   message: `<!channel> Good Morning! Please remember to input your clock in time today!\n\n
-  <https://slack.com/shortcuts/Ft080TARGKCJ/a215ccc85f708db740f2e15e07ae816e>` //CHANGE ME
+  <https://slack.com/shortcuts/Ft08CXRLAPB8/20f88ae541e72c3513549e7dafdf27f1>`
 });
 
 export default DailyReminderWorkflow;
