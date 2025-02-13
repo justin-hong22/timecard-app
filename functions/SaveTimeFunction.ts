@@ -8,6 +8,10 @@ export const SaveTimeFunction = DefineFunction({
   source_file: "functions/SaveTimeFunction.ts",
   input_parameters: {
     properties: {
+      name: {
+        type: Schema.types.string,
+        description: "The person who entered time",
+      },
       time_in: {
         type: Schema.types.string,
         description: "Clocked in time",
@@ -20,16 +24,12 @@ export const SaveTimeFunction = DefineFunction({
         type: Schema.types.boolean,
         description: "Boolean to determine if a lunch break was taken. Defaults to 60 minutes",
       },
-      name: {
-        type: Schema.types.string,
-        description: "The person who entered time",
-      },
       comments: {
         type: Schema.types.string,
         description: "Any comments the person has",
       },
     },
-    required: ['time_in', 'time_out', 'lunch_break', 'name'],
+    required: ['name', 'time_in', 'lunch_break'],
   },
   output_parameters: {
     properties: {},
@@ -38,12 +38,12 @@ export const SaveTimeFunction = DefineFunction({
 });
 
 export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
-  const {name, time_in, time_out, lunch_break, comments} = inputs;
-  
+  const {name, time_in, time_out, lunch_break, comments} = inputs;  
+  const end_time = (time_out == null) ? (Number(time_in) * 1000) + (9 * 60 * 60 * 1000) : Number(time_out) * 1000;
+
   const date_in = new Date(Number(time_in) * 1000);
-  const date_out = new Date(Number(time_out) * 1000);
-  const duration = lunch_break ? (date_out.getTime() - date_in.getTime() - 3600000) / 3600000 : 
-    (date_out.getTime() - date_in.getTime()) / 3600000;
+  const date_out = new Date(end_time);
+  const duration = lunch_break ? (date_out.getTime() - date_in.getTime() - 3600000) / 3600000 : (date_out.getTime() - date_in.getTime()) / 3600000;
   const holiday_name = findHoliday(date_in);
 
   const uuid = crypto.randomUUID();
