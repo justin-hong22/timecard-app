@@ -2,6 +2,7 @@ import { Manifest } from "deno-slack-sdk/mod.ts";
 import SaveTimeWorkflow from "./workflows/SaveTimeWorkflow.ts";
 import ReportWorkflow from "./workflows/ReportWorkflow.ts";
 import DailyReminderWorkflow from "./workflows/DailyReminderWorkflow.ts";
+import MessageWorkflow from "./workflows/MessageWorkflow.ts";
 import { SaveTimeFunction } from "./functions/SaveTimeFunction.ts";
 import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
@@ -21,7 +22,7 @@ export default Manifest({
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore],
   functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, TemplateSenderFunction],
-  workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow],
+  workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com'],
   botScopes: [
@@ -34,5 +35,16 @@ export default Manifest({
     "files:read",
     "users:read",
     "users:read.email",
+
+    //Below are for the 1st message of the day functionality
+    "channels:join",
+    "channels:manage",
+    "channels:history",
+    "groups:write",
+    "im:write",
+    "im:history",
+    "mpim:write",
+    "triggers:write",
+    "triggers:read",
   ],
 });
