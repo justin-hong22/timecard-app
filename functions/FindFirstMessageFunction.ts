@@ -1,5 +1,5 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import message_datastore, { MESSAGE_DATASTORE } from "../datastores/MessageDatastore.ts";
+import { MESSAGE_DATASTORE } from "../datastores/MessageDatastore.ts";
 
 export const FindFirstMessage = DefineFunction({
   callback_id: "find_first_message",
