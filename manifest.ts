@@ -9,10 +9,9 @@ import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
 import { GetOAuthFunction } from "./functions/GetOAuthFunction.ts";
 import { TemplateSenderFunction } from "./functions/TemplateSenderFunction.ts";
 import { FindFirstMessage } from "./functions/FindFirstMessageFunction.ts";
-
+import { StoreTimeFromMsg } from "./functions/StoreTimeFromMsg.ts";
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
 import MessageDatastore from "./datastores/MessageDatastore.ts";
-
 import { TimeCardType } from "./types/TimeCardType.ts";
 
 /**
@@ -26,7 +25,7 @@ export default Manifest({
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore, MessageDatastore],
   functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, 
-    TemplateSenderFunction, FindFirstMessage],
+    TemplateSenderFunction, FindFirstMessage, StoreTimeFromMsg],
   workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com'],
