@@ -30,7 +30,7 @@ export default SlackFunction(FindFirstMessage, async({inputs, client}) => {
   const user_id = inputs.user_id;
   const timestamp = Number(inputs.message_time);
 
-  const message_ts = new Date(timestamp * 1000);
+  const message_ts = new Date(timestamp * 1000  + (9 * 60 * 60 * 1000));
   const message_date = `${message_ts.getMonth() + 1}-${message_ts.getDate()}-${message_ts.getFullYear()}`;
   const queryResponse = await client.apps.datastore.query({
     datastore: "message_datastore",
