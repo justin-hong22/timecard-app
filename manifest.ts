@@ -8,7 +8,11 @@ import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
 import { GetOAuthFunction } from "./functions/GetOAuthFunction.ts";
 import { TemplateSenderFunction } from "./functions/TemplateSenderFunction.ts";
+import { FindFirstMessage } from "./functions/FindFirstMessageFunction.ts";
+
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
+import MessageDatastore from "./datastores/MessageDatastore.ts";
+
 import { TimeCardType } from "./types/TimeCardType.ts";
 
 /**
@@ -20,8 +24,9 @@ export default Manifest({
   name: "timecard-app",
   description: "A blank template for building Slack apps with Deno",
   icon: "assets/default_new_app_icon.png",
-  datastores: [TimecardDatastore],
-  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, TemplateSenderFunction],
+  datastores: [TimecardDatastore, MessageDatastore],
+  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, 
+    TemplateSenderFunction, FindFirstMessage],
   workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com'],
@@ -37,14 +42,9 @@ export default Manifest({
     "users:read.email",
 
     //Below are for the 1st message of the day functionality
-    "channels:join",
-    "channels:manage",
     "channels:history",
-    "groups:write",
-    "im:write",
-    "im:history",
-    "mpim:write",
-    "triggers:write",
-    "triggers:read",
+    "groups:history",
+    "im:read",
+    "mpim:read",
   ],
 });
