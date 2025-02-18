@@ -64,6 +64,8 @@ SaveTimeWorkflow.addStep(SaveTimeFunction, {
   lunch_break: inputForm.outputs.fields.lunch_break,
   name: inputForm.outputs.fields.name,
   comments: inputForm.outputs.fields.comments,
+  from_msg: false,
+  is_first_msg: false,
 });
 
 SaveTimeWorkflow.addStep(Schema.slack.functions.SendMessage, {

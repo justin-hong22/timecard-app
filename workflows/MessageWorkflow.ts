@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { FindFirstMessage } from "../functions/FindFirstMessageFunction.ts";
-import { StoreTimeFromMsg } from "../functions/StoreTimeFromMsg.ts";
+import { SaveTimeFunction } from "../functions/SaveTimeFunction.ts";
 
 const MessageWorkflow = DefineWorkflow({
   callback_id: "message_workflow",
@@ -21,11 +21,13 @@ const is_first_msg = MessageWorkflow.addStep(FindFirstMessage, {
   message_time: MessageWorkflow.inputs.message_ts,
 });
 
-const confirmation_msg = MessageWorkflow.addStep(StoreTimeFromMsg, {
+const confirmation_msg = MessageWorkflow.addStep(SaveTimeFunction, {
+  name: MessageWorkflow.inputs.user_id,
+  time_in: MessageWorkflow.inputs.message_ts,
+  lunch_break: true,
+  from_msg: true,
   is_first_msg: is_first_msg.outputs.is_first,
-  user_id: MessageWorkflow.inputs.user_id,
-  timestamp: MessageWorkflow.inputs.message_ts,
-})
+});
 
 MessageWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: MessageWorkflow.inputs.channel,
