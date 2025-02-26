@@ -3,7 +3,7 @@ import ReportWorkflow from "../workflows/ReportWorkflow.ts";
 
 const ReportTrigger: Trigger<typeof ReportWorkflow.definition> = {
   type: "shortcut",
-  name: "Generate time in and time out report",
+  name: "Generate Report",
   description: "Make a weekly and monthly report about clocking in and out",
   workflow: `#/workflows/${ReportWorkflow.definition.callback_id}`,
   inputs: {

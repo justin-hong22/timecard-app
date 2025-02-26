@@ -71,9 +71,6 @@ function isWithinTimeFrame(type : string, time : Date)
 {
   let now = new Date();
   now = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
-  console.log("now = " + now);
-  console.log("time = " + time);
-  console.log("\n\n");
   
   if(type == "Weekly") {
     const lastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
