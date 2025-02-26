@@ -53,6 +53,7 @@ export const SaveTimeFunction = DefineFunction({
 export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   const {name, time_in, time_out, lunch_break, comments, from_msg, is_first_msg} = inputs;
   let date_in, date_out, duration, holiday_name;
+  const tokyoOffset = 9 * 60 * 60 * 1000;
 
   if(from_msg)
   {
@@ -60,8 +61,8 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
       return { outputs: { confirmation_message: `This is not the first message of the day, so time entry was not saved` } };
     }
 
-    date_in = new Date(Number(time_in) * 1000);
-    date_out = new Date(Number(time_in) * 1000 + (9 * 60 * 60 * 1000));
+    date_in = new Date(Number(time_in) * 1000 + tokyoOffset);
+    date_out = new Date(Number(time_in) * 1000 + (9 * 60 * 60 * 1000) + tokyoOffset);
     duration = 8;
     holiday_name = FindHoliday(date_in);
   }
@@ -69,8 +70,8 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   {
     const end_time = (time_out == null) ? (Number(time_in) * 1000) + (9 * 60 * 60 * 1000) : Number(time_out) * 1000;
 
-    date_in = new Date(Number(time_in) * 1000);
-    date_out = new Date(end_time);
+    date_in = new Date(Number(time_in) * 1000 + tokyoOffset);
+    date_out = new Date(end_time + tokyoOffset);
     duration = lunch_break ? (date_out.getTime() - date_in.getTime() - 3600000) / 3600000 : (date_out.getTime() - date_in.getTime()) / 3600000;
     holiday_name = FindHoliday(date_in);
   }
@@ -102,7 +103,7 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   return { outputs: {} };
 });
 
-function FindHoliday(date : Date)
+function FindHoliday(input_date : Date)
 {
   function getVariableHolidays(year : number, month : number, week : number, weekday : number)
   {
@@ -125,8 +126,7 @@ function FindHoliday(date : Date)
     ['11-3', 'Culture Day'],
     ['11-23', 'Labor Thanksgiving Day'],
   ]);
-
-  const input_date =  new Date(date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  
   const input_year = input_date.getFullYear();
   holidays.set(getVariableHolidays(input_year, 0, 2, 1), 'Coming of Age Day');
   holidays.set(getVariableHolidays(input_year, 6, 3, 1), 'Marine Day');
