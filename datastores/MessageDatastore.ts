@@ -9,10 +9,10 @@ const MessageDatastore = DefineDatastore({
     id: {
       type: Schema.types.string,
     },
-    user_id: {
+    person_name: {
       type: Schema.slack.types.user_id,
     },
-    message_time: {
+    time_in: {
       type: Schema.types.string,
     }
   }

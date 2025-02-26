@@ -30,10 +30,10 @@ export const DeleteTimeFunction = DefineFunction({
   }
 });
 
-async function getPimaryKey(user_id : string, date : string, client : SlackAPIClient)
+async function getPimaryKey(user_id : string, date : string, client : SlackAPIClient, datastore : string)
 {  
   const query = await client.apps.datastore.query({
-    datastore: "timecard_datastore",
+    datastore: datastore,
     expression: "contains(#time_in, :time_in) AND #person_name = :person_name",
     expression_attributes: { 
       "#time_in": "time_in", 
@@ -57,9 +57,25 @@ async function getPimaryKey(user_id : string, date : string, client : SlackAPICl
   }
 }
 
+async function deleteOutOfMsgDatastore(user_id : string, date : string, client : SlackAPIClient) 
+{
+  const primary_keys = await getPimaryKey(user_id, date, client, "message_datastore");
+  if(primary_keys.length > 0)
+  {
+    const msgDeleteQuery = await client.apps.datastore.bulkDelete({
+    datastore: "message_datastore",
+    ids: primary_keys,
+    });
+  
+    if(!msgDeleteQuery.ok) {
+      console.error(`Query failed: ${msgDeleteQuery.error}`);
+    }
+  }
+}
+
 export default SlackFunction(DeleteTimeFunction, async({inputs, client}) => {
   const {user_id, date} = inputs
-  const uuids = await getPimaryKey(user_id, date, client);
+  const uuids = await getPimaryKey(user_id, date, client, "timecard_datastore");
 
   let msg = "";
   if(uuids.length > 0)
@@ -79,6 +95,7 @@ export default SlackFunction(DeleteTimeFunction, async({inputs, client}) => {
   else {
     msg = `There was no time entry to delete for ${date}`;
   }
-    
+
+  await deleteOutOfMsgDatastore(user_id, date, client);
   return {outputs: {confirmation_message: msg} }
 });

@@ -31,17 +31,17 @@ export default SlackFunction(FindFirstMessage, async({inputs, client}) => {
   const timestamp = Number(inputs.message_time);
 
   const message_ts = new Date(timestamp * 1000  + (9 * 60 * 60 * 1000));
-  const message_date = `${message_ts.getMonth() + 1}-${message_ts.getDate()}-${message_ts.getFullYear()}`;
+  const message_date = `${message_ts.getFullYear()}-${String(message_ts.getMonth() + 1).padStart(2, '0')}-${String(message_ts.getDate()).padStart(2, '0')}`;
   const queryResponse = await client.apps.datastore.query({
     datastore: "message_datastore",
-    expression: '#mt = :message_time AND #uid = :user_id',
+    expression: '#time_in = :time_in AND #person_name = :person_name',
     expression_attributes: {
-      '#mt': 'message_time',
-      '#uid': 'user_id',
+      '#time_in': 'time_in',
+      '#person_name': 'person_name',
     },
     expression_values: {
-      ':message_time': message_date,
-      ':user_id': user_id,
+      ':time_in': message_date,
+      ':person_name': user_id,
     },
   });
 
@@ -53,8 +53,8 @@ export default SlackFunction(FindFirstMessage, async({inputs, client}) => {
       datastore: MESSAGE_DATASTORE,
       item: {
         id: uuid,
-        user_id: user_id,
-        message_time: message_date,
+        person_name: user_id,
+        time_in: message_date,
       }
     });
 
