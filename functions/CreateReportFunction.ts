@@ -50,7 +50,6 @@ export const CreateReportFunction = DefineFunction({
 function formatTime(time : string) 
 {
   return new Date(time).toLocaleString('en-US', { 
-    timeZone: 'Asia/Tokyo', 
     year: "numeric",
     month: '2-digit',
     day: '2-digit',
@@ -72,14 +71,16 @@ function isWithinTimeFrame(type : string, time : Date)
 {
   let now = new Date();
   now = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
-  const jstTime = new Date(time.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  console.log("now = " + now);
+  console.log("time = " + time);
+  console.log("\n\n");
   
   if(type == "Weekly") {
     const lastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-    return (jstTime >= lastWeek && jstTime <= now) ? true : false;
+    return (time >= lastWeek && time <= now) ? true : false;
   }
   else if(type == "Monthly") {
-    return (jstTime.getMonth() == now.getMonth() && jstTime.getFullYear() == now.getFullYear()) ? true : false;
+    return (time.getMonth() == now.getMonth() && time.getFullYear() == now.getFullYear()) ? true : false;
   }
 
   return false;
