@@ -30,7 +30,7 @@ export const DeleteTimeFunction = DefineFunction({
   }
 });
 
-async function getPimaryKey(user_id : string, date : string, client : SlackAPIClient, datastore : string)
+export async function getPrimaryKey(user_id : string, date : string, client : SlackAPIClient, datastore : string)
 {  
   const query = await client.apps.datastore.query({
     datastore: datastore,
@@ -59,7 +59,7 @@ async function getPimaryKey(user_id : string, date : string, client : SlackAPICl
 
 async function deleteOutOfMsgDatastore(user_id : string, date : string, client : SlackAPIClient) 
 {
-  const primary_keys = await getPimaryKey(user_id, date, client, "message_datastore");
+  const primary_keys = await getPrimaryKey(user_id, date, client, "message_datastore");
   if(primary_keys.length > 0)
   {
     const msgDeleteQuery = await client.apps.datastore.bulkDelete({
@@ -75,7 +75,7 @@ async function deleteOutOfMsgDatastore(user_id : string, date : string, client :
 
 export default SlackFunction(DeleteTimeFunction, async({inputs, client}) => {
   const {user_id, date} = inputs
-  const uuids = await getPimaryKey(user_id, date, client, "timecard_datastore");
+  const uuids = await getPrimaryKey(user_id, date, client, "timecard_datastore");
 
   let msg = "";
   if(uuids.length > 0)
