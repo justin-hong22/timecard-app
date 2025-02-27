@@ -4,6 +4,7 @@ import ReportWorkflow from "./workflows/ReportWorkflow.ts";
 import DailyReminderWorkflow from "./workflows/DailyReminderWorkflow.ts";
 import MessageWorkflow from "./workflows/MessageWorkflow.ts";
 import DeleteEntryWorkflow from "./workflows/DeleteEntryWorkflow.ts";
+import UpdateEntryWorkflow from "./workflows/UpdateWorkflow.ts";
 import { SaveTimeFunction } from "./functions/SaveTimeFunction.ts";
 import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
@@ -11,6 +12,7 @@ import { GetOAuthFunction } from "./functions/GetOAuthFunction.ts";
 import { TemplateSenderFunction } from "./functions/TemplateSenderFunction.ts";
 import { FindFirstMessage } from "./functions/FindFirstMessageFunction.ts";
 import { DeleteTimeFunction } from "./functions/DeleteTimeFunction.ts";
+import { UpdateTimeFunction } from "./functions/UpdateTimeFunction.ts";
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
 import MessageDatastore from "./datastores/MessageDatastore.ts";
 import { TimeCardType } from "./types/TimeCardType.ts";
@@ -26,8 +28,8 @@ export default Manifest({
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore, MessageDatastore],
   functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, TemplateSenderFunction, 
-    FindFirstMessage, DeleteTimeFunction],
-  workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow, DeleteEntryWorkflow],
+    FindFirstMessage, DeleteTimeFunction, UpdateTimeFunction],
+  workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow, DeleteEntryWorkflow, UpdateEntryWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com'],
   botScopes: [

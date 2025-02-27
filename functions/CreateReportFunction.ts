@@ -122,7 +122,7 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
         signtime_string += row;
 
         const holiday = entries[i].holiday_name;
-        if(holiday != "undefined") {
+        if(holiday != "undefined" && holiday != "") {
           holidays += holiday + ", ";
         }
 

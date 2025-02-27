@@ -51,7 +51,7 @@ const time_entries = DeleteEntryWorkflow.addStep(CollectTimeFunction, {});
 
 const report = DeleteEntryWorkflow.addStep(CreateReportFunction, {
   user: DeleteEntryWorkflow.inputs.user_id,
-  report_type: "General",
+  report_type: "Monthly",
   time_entries: time_entries.outputs.time_entries,
 });
 
@@ -59,7 +59,7 @@ DeleteEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: DeleteEntryWorkflow.inputs.channel,
   message:
     `${delete_msg.outputs.confirmation_message}\n` +
-    `Below are saved time entries after the deletion for <@${DeleteEntryWorkflow.inputs.user_id}>\n` +
+    `Below are saved time entries this month after the deletion for <@${DeleteEntryWorkflow.inputs.user_id}>\n` +
     `${report.outputs.table_string}\n\n` +
     `Holidays Passed: ${report.outputs.holidays}\n\n` + 
     `Comments:\n${report.outputs.comments}`,

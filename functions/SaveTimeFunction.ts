@@ -103,7 +103,7 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   return { outputs: {} };
 });
 
-function FindHoliday(input_date : Date)
+export function FindHoliday(input_date : Date)
 {
   function getVariableHolidays(year : number, month : number, week : number, weekday : number)
   {
