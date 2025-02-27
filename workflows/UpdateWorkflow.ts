@@ -54,6 +54,12 @@ const inputForm = UpdateEntryWorkflow.addStep(
         default: true,
       },
       {
+        name: "delete_comment",
+        title: "Would you like to clear any existing comments on this entry?",
+        type: Schema.types.boolean,
+        default: false,
+      },
+      {
         name: "comments",
         title: "Comments",
         type: Schema.types.string,
@@ -71,6 +77,7 @@ const update_msg = UpdateEntryWorkflow.addStep(UpdateTimeFunction, {
   time_in: inputForm.outputs.fields.time_in,
   time_out: inputForm.outputs.fields.time_out,
   lunch_break: inputForm.outputs.fields.lunch_break,
+  delete_comment: inputForm.outputs.fields.delete_comment,
   comments: inputForm.outputs.fields.comments,
 });
 

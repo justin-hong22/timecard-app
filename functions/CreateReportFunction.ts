@@ -127,7 +127,7 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
         }
 
         const comment = entries[i].comments;
-        if(comment != "undefined") {
+        if(comment != "undefined" && comment != "") {
           comments += `${time_in}`.substring(0,10) + `: ${comment}\n`;
         }
       }

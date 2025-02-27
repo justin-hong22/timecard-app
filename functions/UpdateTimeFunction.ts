@@ -30,6 +30,10 @@ export const UpdateTimeFunction = DefineFunction({
         type: Schema.types.boolean,
         description: "Boolean to determine if a lunch break was taken. Defaults to 60 minutes",
       },
+      delete_comment: {
+        type: Schema.types.boolean,
+        description: "Boolean to determine if comments should be cleared out",
+      },
       comments: {
         type: Schema.types.string,
         description: "Any comments the person has",
@@ -49,7 +53,7 @@ export const UpdateTimeFunction = DefineFunction({
 });
 
 export default SlackFunction(UpdateTimeFunction, async({inputs, client}) => {
-  const {name, date, time_in, time_out, lunch_break, comments} = inputs;
+  const {name, date, time_in, time_out, lunch_break, delete_comment} = inputs;
   const uuid = await getPrimaryKey(name, date, client, "timecard_datastore");
   const end_time = (time_out == null) ? (Number(time_in) * 1000) + (9 * 60 * 60 * 1000) : Number(time_out) * 1000;
   const tokyoOffset = 9 * 60 * 60 * 1000;
@@ -60,6 +64,9 @@ export default SlackFunction(UpdateTimeFunction, async({inputs, client}) => {
   const duration = lunch_break ? (date_out.getTime() - date_in.getTime() - 3600000) / 3600000 : (date_out.getTime() - date_in.getTime()) / 3600000;
   let holiday_name = FindHoliday(date_in);
   if(holiday_name == undefined) { holiday_name = ""; }
+
+  let comments = inputs.comments;
+  if(delete_comment) { comments = "" }
   
   
   let items: { id: any[]; person_name: string; time_in: Date; time_out: Date; duration: number; lunch_break: boolean; holiday_name?: string;comments?: string; } 
@@ -73,7 +80,7 @@ export default SlackFunction(UpdateTimeFunction, async({inputs, client}) => {
     holiday_name: holiday_name,
   };
   
-  if(comments != null) {
+  if(comments !== undefined) {
     items = { ...items, comments };
   }
 
