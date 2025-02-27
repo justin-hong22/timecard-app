@@ -18,7 +18,7 @@ const SaveTimeWorkflow = DefineWorkflow({
 const inputForm = SaveTimeWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Input Form",
+    title: "Log a new time entry",
     interactivity: SaveTimeWorkflow.inputs.interactivity,
     submit_label: "Submit Info",
     fields: {
