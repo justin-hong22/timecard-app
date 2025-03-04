@@ -16,6 +16,9 @@ const SaveTimeTrigger: Trigger<typeof SaveTimeWorkflow.definition> = {
     user_id: {
       value: "{{data.user_id}}",
     },
+    invoke_time: {
+      value: "{{event_timestamp}}",
+    }
   },
 };
 

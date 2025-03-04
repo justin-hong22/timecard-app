@@ -10,6 +10,7 @@ const SaveTimeWorkflow = DefineWorkflow({
       interactivity: { type: Schema.slack.types.interactivity },
       channel: { type: Schema.slack.types.channel_id },
       user_id: { type: Schema.slack.types.user_id },
+      invoke_time: { type: Schema.slack.types.timestamp },
     },
     required: [],
   }
@@ -33,6 +34,7 @@ const inputForm = SaveTimeWorkflow.addStep(
         name: "time_in",
         title: "Time In",
         type: Schema.slack.types.timestamp,
+        default: SaveTimeWorkflow.inputs.invoke_time,
       },
       {
         name: "time_out",
