@@ -72,7 +72,7 @@ SaveTimeWorkflow.addStep(SaveTimeFunction, {
 
 SaveTimeWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: SaveTimeWorkflow.inputs.channel,
-  message: `Time entry has been successfully saved`
+  message: `Time entry has been successfully saved for <@${SaveTimeWorkflow.inputs.user_id}>`
 });
 
 export default SaveTimeWorkflow;
