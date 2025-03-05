@@ -85,7 +85,7 @@ const time_entries = UpdateEntryWorkflow.addStep(CollectTimeFunction, {});
 
 const report = UpdateEntryWorkflow.addStep(CreateReportFunction, {
   user: UpdateEntryWorkflow.inputs.user_id,
-  report_type: "Monthly",
+  report_type: "General",
   time_entries: time_entries.outputs.time_entries,
 });
 
@@ -93,7 +93,7 @@ UpdateEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: UpdateEntryWorkflow.inputs.channel,
   message:
     `${update_msg.outputs.confirmation_message}\n` +
-    `Below are saved time entries after the update this month for <@${UpdateEntryWorkflow.inputs.user_id}>\n` +
+    `Below are saved time entries after the update for <@${UpdateEntryWorkflow.inputs.user_id}>\n` +
     `${report.outputs.table_string}\n\n` +
     `Holidays Passed: ${report.outputs.holidays}\n\n` + 
     `Comments:\n${report.outputs.comments}`,
