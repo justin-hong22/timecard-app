@@ -3,8 +3,8 @@ import UpdateEntryWorkflow from "../workflows/UpdateWorkflow.ts";
 
 const UpdateTrigger: Trigger<typeof UpdateEntryWorkflow.definition> = {
   type: "shortcut",
-  name: "Update a Time Entry",
-  description: "Update a time entry",
+  name: "時間エントリーを更新 (Update Entry)",
+  description: "時間エントリーをアップデートさせます",
   workflow: `#/workflows/${UpdateEntryWorkflow.definition.callback_id}`,
   inputs: {
     interactivity: {

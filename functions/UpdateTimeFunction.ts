@@ -92,14 +92,14 @@ export default SlackFunction(UpdateTimeFunction, async({inputs, client}) => {
   });
 
     if(updateQuery.ok) {
-      msg = `Successfully updated the time entry on ${date}`;
+      msg = `${date}の時間エントリーをアップデートされました (Successfully updated the time entry on ${date})`;
     }
     else {
       console.error(`Query failed: ${updateQuery.error}`);
     }
   }
   else {
-    msg = `There was no time entry inputted on ${date}`;
+    msg = `${date}の時間エントリーは存在しません (There was no time entry inputted on ${date})`;
   }
   
   return {outputs: { confirmation_message: msg} }

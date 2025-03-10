@@ -20,48 +20,48 @@ const UpdateEntryWorkflow = DefineWorkflow({
 const inputForm = UpdateEntryWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Update a Time Entry",
+    title: "エントリーを更新 (Update Entry)",
     interactivity: UpdateEntryWorkflow.inputs.interactivity,
-    submit_label: "Update",
+    submit_label: "アップデート (Update)",
     fields: {
     elements: [
       {
         name: "name",
-        title: "Select the Name of who you want to update",
+        title: "名前 (Name)",
         type: Schema.slack.types.user_id,
         default: UpdateEntryWorkflow.inputs.user_id,
       },
       {
         name: "date",
-        title: "Date of entry to be updated",
+        title: "エントリーの月日 (Date of entry to be updated)",
         type: Schema.slack.types.date,
       },
       {
         name: "time_in",
-        title: "New Time In",
+        title: "新しい出勤 (New Time In)",
         type: Schema.slack.types.timestamp,
       },
       {
         name: "time_out",
-        title: "New Time Out",
+        title: "新しい退勤 (New Time Out)",
         type: Schema.slack.types.timestamp,
-        description: "If left blank, default is 9 hours from Time In",
+        description: "空白の場合、出勤時間から９時間を保存します (If left blank, default is 9 hours from Time In)",
       },
       {
         name: "lunch_break",
-        title: "Did you take a lunch break?",
+        title: "昼ごはん休みを取りましたか？ (Did you take a lunch break?)",
         type: Schema.types.boolean,
         default: true,
       },
       {
         name: "delete_comment",
-        title: "Would you like to clear any existing comments on this entry?",
+        title: "既存コメントを削除したい？ (Would you like to clear any existing comments on this entry?)",
         type: Schema.types.boolean,
         default: false,
       },
       {
         name: "comments",
-        title: "Comments",
+        title: "コメント (Comments)",
         type: Schema.types.string,
         long: true
       }
@@ -85,7 +85,7 @@ const time_entries = UpdateEntryWorkflow.addStep(CollectTimeFunction, {});
 
 const report = UpdateEntryWorkflow.addStep(CreateReportFunction, {
   user: UpdateEntryWorkflow.inputs.user_id,
-  report_type: "General",
+  report_type: "一般 (General)",
   time_entries: time_entries.outputs.time_entries,
 });
 
@@ -93,10 +93,10 @@ UpdateEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: UpdateEntryWorkflow.inputs.channel,
   message:
     `${update_msg.outputs.confirmation_message}\n` +
-    `Below are saved time entries after the update for <@${UpdateEntryWorkflow.inputs.user_id}>\n` +
+    `<@${UpdateEntryWorkflow.inputs.user_id}>のアップデートした後時間エントリー (Below are saved time entries after the update for <@${UpdateEntryWorkflow.inputs.user_id}>)\n` +
     `${report.outputs.table_string}\n\n` +
-    `Holidays Passed: ${report.outputs.holidays}\n\n` + 
-    `Comments:\n${report.outputs.comments}`,
+    `祝日経過 (Holidays Passed): ${report.outputs.holidays}\n\n` + 
+    `コメント (Comments):\n${report.outputs.comments}`,
 });
 
 export default UpdateEntryWorkflow;
