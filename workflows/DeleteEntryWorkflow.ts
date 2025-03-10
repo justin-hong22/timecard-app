@@ -20,20 +20,20 @@ const DeleteEntryWorkflow = DefineWorkflow({
 const inputForm = DeleteEntryWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Delete a Time Entry",
+    title: "エントリーを削除 (Delete Entry)",
     interactivity: DeleteEntryWorkflow.inputs.interactivity,
-    submit_label: "Delete",
+    submit_label: "削除 (Delete)",
     fields: {
       elements: [
       {
         name: "name",
-        title: "Select the Name of who you want to delete",
+        title: "名前 (Name)",
         type: Schema.slack.types.user_id,
         default: DeleteEntryWorkflow.inputs.user_id,
       },
       {
         name: "date",
-        title: "Date of entry to be deleted",
+        title: "削除される時間エントリーの月日 (Date of entry to be deleted)",
         type: Schema.slack.types.date,
       },
       ],
@@ -51,7 +51,7 @@ const time_entries = DeleteEntryWorkflow.addStep(CollectTimeFunction, {});
 
 const report = DeleteEntryWorkflow.addStep(CreateReportFunction, {
   user: DeleteEntryWorkflow.inputs.user_id,
-  report_type: "General",
+  report_type: "一般 (General)",
   time_entries: time_entries.outputs.time_entries,
 });
 
@@ -59,10 +59,10 @@ DeleteEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: DeleteEntryWorkflow.inputs.channel,
   message:
     `${delete_msg.outputs.confirmation_message}\n` +
-    `Below are saved time entries after the deletion for <@${DeleteEntryWorkflow.inputs.user_id}>\n` +
+    `<@${DeleteEntryWorkflow.inputs.user_id}>の削除した後残り時間エントリー (Saved time entries after the deletion for <@${DeleteEntryWorkflow.inputs.user_id}>)\n` +
     `${report.outputs.table_string}\n\n` +
-    `Holidays Passed: ${report.outputs.holidays}\n\n` + 
-    `Comments:\n${report.outputs.comments}`,
+    `祝日経過 (Holidays Passed): ${report.outputs.holidays}\n\n` + 
+    `コメント (Comments):\n${report.outputs.comments}`,
 });
 
 export default DeleteEntryWorkflow;

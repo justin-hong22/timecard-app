@@ -86,14 +86,14 @@ export default SlackFunction(DeleteTimeFunction, async({inputs, client}) => {
     });
 
     if(deleteQuery.ok) {
-      msg = `Successfully deleted the time entry on ${date}`;
+      msg = `${date}の時間エントリーを削除されました (Successfully deleted the time entry on ${date})`;
     }
     else {
       console.error(`Query failed: ${deleteQuery.error}`);
     }
   }
   else {
-    msg = `There was no time entry to delete for ${date}`;
+    msg = `${date}の時間エントリーは存在しません (There was no time entry to delete for ${date})`;
   }
 
   await deleteOutOfMsgDatastore(user_id, date, client);
