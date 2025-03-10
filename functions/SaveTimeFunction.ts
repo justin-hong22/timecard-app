@@ -58,7 +58,7 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   if(from_msg)
   {
     if(!is_first_msg) {
-      return { outputs: { confirmation_message: `This is not the first message of the day, so time entry was not saved` } };
+      return { outputs: { confirmation_message: `今日はもうメッセージを送ったので時間エントリーをされません (This is not the first message of the day, so time entry was not saved)` } };
     }
 
     date_in = new Date(Number(time_in) * 1000 + tokyoOffset);
@@ -97,7 +97,7 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
   }
 
   if(from_msg && is_first_msg) { 
-    return { outputs: { confirmation_message: `Time entry has been saved from first message of the day!`} }
+    return { outputs: { confirmation_message: `今日の最初メッセージから時間エントリーを保存されました！ (Time entry has been saved from first message of the day!)`} }
   }
 
   return { outputs: {} };
