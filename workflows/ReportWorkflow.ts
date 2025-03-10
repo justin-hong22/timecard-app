@@ -28,19 +28,19 @@ const report_type = ReportWorkflow.addStep(
       elements: [
         {
           name: "user",
-          title: "Name",
+          title: "名前 (Name)",
           type: Schema.slack.types.user_id,
           default: ReportWorkflow.inputs.user_id,
         },
         {
           name: "report_type",
-          title: 'What type of report would you like to make?',
-          description: "Either weekly or monthly report to be generated",
+          title: 'どんなレポートを作成しましょうか？ (What type of report would you like to make?)',
+          description: "週報とか月報を作成できます (Either weekly or monthly report to be generated)",
           type: Schema.types.string,
           enum: [
-            "Weekly",
-            "Monthly",
-            "General",
+            "週報 (Weekly)",
+            "月報 (Monthly)",
+            "一般 (General)",
           ],
         }],
         required: ['user', 'report_type']
@@ -71,10 +71,10 @@ ReportWorkflow.addStep(TemplateSenderFunction, {
 ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: ReportWorkflow.inputs.channel,
   message: 
-    `Inputted time entries so far for <@${report_type.outputs.fields.user}>\n` +
+    `<@${report_type.outputs.fields.user}>の時間エントリー (Inputted time entries so far for <@${report_type.outputs.fields.user}>)\n` +
     `${report.outputs.table_string}\n\n` +
-    `Holidays Passed: ${report.outputs.holidays}\n\n` + 
-    `Comments:\n${report.outputs.comments}`,
+    `祝日経過 (Holidays Passed): ${report.outputs.holidays}\n\n` + 
+    `コメント (Comments):\n${report.outputs.comments}`,
 });
 
 export default ReportWorkflow;

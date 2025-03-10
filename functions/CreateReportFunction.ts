@@ -83,23 +83,29 @@ function isWithinTimeFrame(type : string, time : Date)
   return false;
 }
 
+function getReportType(input: string) : string 
+{
+  const part = input.split("(");
+  return part[1].split(")")[0];
+}
+
 export default SlackFunction(CreateReportFunction, ({inputs}) => {
   const entries = inputs.time_entries;
-  const type = inputs.report_type;
+  const type = getReportType(inputs.report_type);
   const user = inputs.user;
   entries.sort((a,b) => new Date(a.time_in).getTime() - new Date(b.time_in).getTime());
 
-  const column1 = "Time In";
-  const column2 = "Time Out";
-  const column3 = "Lunch?";
-  const column4 = "Duration";
+  const column1 = "出勤 (Time In)";
+  const column2 = "退勤 (Time Out)";
+  const column3 = "昼休み (Lunch?)";
+  const column4 = "間 (Duration)";
   
   let table = "\`\`\`";
-  if(type == "Weekly") { table += "Weekly Report\n\n" }
-  else if (type == "Monthly") { table += "Monthly Report\n\n" }
-  else { table += "General Report\n\n" }
+  if(type == "Weekly") { table += "週報 (Weekly Report)\n\n" }
+  else if (type == "Monthly") { table += "月報 (Monthly Report)\n\n" }
+  else { table += "一般レポート (General Report)\n\n" }
 
-  table += column1.padEnd(30, ' ') + column2.padEnd(33, ' ') + column3.padEnd(21, ' ') + column4 + "\n";
+  table += column1.padEnd(29, ' ') + column2.padEnd(30, ' ') + column3.padEnd(19, ' ') + column4 + "\n";
   let signtime_string = "";
   let holidays = "";
   let comments = "";
@@ -117,7 +123,7 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
         (type == "Monthly" && isWithinTimeFrame("Monthly", new Date(entries[i].time_in))) ||
         (type == "General"))
       {
-        table += `${time_in + ' '.repeat(12)}${time_out + ' '.repeat(15)}${lunch_break.padEnd(21, ' ')}${duration.hours} hours & ${duration.minutes} minutes\n`;
+        table += `${time_in + ' '.repeat(12)}${time_out + ' '.repeat(15)}${lunch_break.padEnd(20, ' ')}${duration.hours} hours & ${duration.minutes} minutes\n`;
         signtime_string += `${time_in + ' '.repeat(12)}${time_out + ' '.repeat(18)}${lunch_break.padEnd(38, ' ')}${duration.hours} hrs & ${duration.minutes} min\n`;
 
         const holiday = entries[i].holiday_name;
@@ -134,8 +140,8 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
   }
 
   table += "\`\`\`";
-  holidays = (holidays != "") ? holidays.slice(0, -2) : "No national holidays were included";
-  comments = (comments != "") ? comments : "No comments were mentioned";
+  holidays = (holidays != "") ? holidays.slice(0, -2) : "休日なし (No national holidays were elapsed)";
+  comments = (comments != "") ? comments : "コメントなし (No comments were mentioned)";
   return {
     outputs: {
       table_string: table,

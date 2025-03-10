@@ -114,32 +114,58 @@ export function FindHoliday(input_date : Date)
     return date;
   }
 
-  const holidays = new Map([
+  const holidays_jp = new Map([
+    ['1-1', '元日'],
+    ['2-11', '建国記念の日'],
+    ['2-23', '天皇誕生日'],
+    ['3-20', '春分の日'],
+    ['4-29', '昭和の日'],
+    ['5-3', '憲法記念日'],
+    ['5-4', 'みどりの日'],
+    ['5-5', 'こどもの日'],
+    ['8-11', '山の日'],
+    ['9-23', '秋分の日'],
+    ['11-3', '文化の日'],
+    ['11-23', '勤労感謝の日'],
+  ]);
+
+  const holidays_en = new Map([
     ['1-1', 'New Year\'s Day'],
     ['2-11', 'National Foundation Day'],
     ['2-23', 'Emperor\'s Birthday'],
+    ['3-20', 'Vernal Equinox Day'],
     ['4-29', 'Showa Day'],
     ['5-3', 'Constitution Day'],
     ['5-4', 'Greenery Day'],
     ['5-5', 'Children\'s Day'],
     ['8-11', 'Mountain Day'],
+    ['9-23', 'Autumnal Equinox Day'],
     ['11-3', 'Culture Day'],
     ['11-23', 'Labor Thanksgiving Day'],
   ]);
   
-  const input_year = input_date.getFullYear();
-  holidays.set(getVariableHolidays(input_year, 0, 2, 1), 'Coming of Age Day');
-  holidays.set(getVariableHolidays(input_year, 6, 3, 1), 'Marine Day');
-  holidays.set(getVariableHolidays(input_year, 8, 3, 1), 'Respected for the Aged Day');
-  holidays.set(getVariableHolidays(input_year, 9, 2, 1), 'Sports Day');
+  const input_year = input_date.getFullYear()
+  holidays_jp.set(getVariableHolidays(input_year, 0, 2, 1), '成人の日');
+  holidays_jp.set(getVariableHolidays(input_year, 6, 3, 1), '海の日');
+  holidays_jp.set(getVariableHolidays(input_year, 8, 3, 1), '敬老の日');
+  holidays_jp.set(getVariableHolidays(input_year, 9, 2, 1), 'スポーツの日');
+
+  holidays_en.set(getVariableHolidays(input_year, 0, 2, 1), 'Coming of Age Day');
+  holidays_en.set(getVariableHolidays(input_year, 6, 3, 1), 'Marine Day');
+  holidays_en.set(getVariableHolidays(input_year, 8, 3, 1), 'Respected for the Aged Day');
+  holidays_en.set(getVariableHolidays(input_year, 9, 2, 1), 'Sports Day');
 
   const check_date = (input_date.getMonth() + 1) + '-' + input_date.getDate();
-  let holiday_name = holidays.get(check_date);
+  let holiday_name = holidays_jp.get(check_date);
+  if(holiday_name != null) {
+    holiday_name = holiday_name + " (" + holidays_en.get(check_date) + ")";
+  } 
 
   //Check for any "observed" holidays
   if(input_date.getDay() == 1 && holiday_name == null) {
-    holiday_name = holidays.get((input_date.getMonth() + 1) + '-' + (input_date.getDate() - 1));
-    if (holiday_name != null) { holiday_name = holiday_name + " (observed)"; } 
+    const holiday_name_jp = holidays_jp.get((input_date.getMonth() + 1) + '-' + (input_date.getDate() - 1));
+    const holiday_name_en = holidays_en.get((input_date.getMonth() + 1) + '-' + (input_date.getDate() - 1));
+    if (holiday_name_jp != null) { holiday_name = holiday_name_jp + " (振替休日) (" + holiday_name_en + " (observed))"; } 
   }
   
   return holiday_name;  
