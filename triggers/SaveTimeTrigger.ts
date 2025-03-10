@@ -3,8 +3,8 @@ import SaveTimeWorkflow from "../workflows/SaveTimeWorkflow.ts";
 
 const SaveTimeTrigger: Trigger<typeof SaveTimeWorkflow.definition> = {
   type: "shortcut",
-  name: "Log Working Time",
-  description: "Save clocking in and clocking out time",
+  name: "作業時間を入力する (Save Working Time)",
+  description: "出勤時間や退勤時間を入力します　（Save clocking in and clocking out time）",
   workflow: `#/workflows/${SaveTimeWorkflow.definition.callback_id}`,
   inputs: {
     interactivity: {

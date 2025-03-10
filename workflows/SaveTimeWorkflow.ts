@@ -19,38 +19,38 @@ const SaveTimeWorkflow = DefineWorkflow({
 const inputForm = SaveTimeWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Log a new time entry",
+    title: "時間エントリーを保存する (Save time)",
     interactivity: SaveTimeWorkflow.inputs.interactivity,
-    submit_label: "Submit Info",
+    submit_label: "保存 (Submit)",
     fields: {
       elements: [
       {
         name: "name",
-        title: "Name",
+        title: "名前 (Name)",
         type: Schema.slack.types.user_id,
         default: SaveTimeWorkflow.inputs.user_id,
       },
       {
         name: "time_in",
-        title: "Time In",
+        title: "出勤 (Time In)",
         type: Schema.slack.types.timestamp,
         default: SaveTimeWorkflow.inputs.invoke_time,
       },
       {
         name: "time_out",
-        title: "Time Out",
-        description: "If left blank, default is 9 hours from Time In",
+        title: "退勤 (Time Out)",
+        description: "空白の場合、出勤時間から９時間を保存します (If left blank, default is 9 hours from Time In)",
         type: Schema.slack.types.timestamp,
       },
       {
         name: "lunch_break",
-        title: "Did you take a lunch break?",
+        title: "昼ごはん休みを取りましたか？ (Did you take a lunch break?)",
         type: Schema.types.boolean,
         default: true,
       },
       {
         name: "comments",
-        title: "Comments",
+        title: "コメント (Comments)",
         type: Schema.types.string,
         long: true
       }
@@ -72,7 +72,7 @@ SaveTimeWorkflow.addStep(SaveTimeFunction, {
 
 SaveTimeWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: SaveTimeWorkflow.inputs.channel,
-  message: `Time entry has been successfully saved for <@${SaveTimeWorkflow.inputs.user_id}>`
+  message: `<@${SaveTimeWorkflow.inputs.user_id}>の時間エントリー正常に保存されました (Time entry has been successfully saved for <@${SaveTimeWorkflow.inputs.user_id}>)`
 });
 
 export default SaveTimeWorkflow;
