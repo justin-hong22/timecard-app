@@ -124,7 +124,7 @@ export default SlackFunction(CreateReportFunction, ({inputs}) => {
         (type == "General"))
       {
         table += `${time_in + ' '.repeat(12)}${time_out + ' '.repeat(15)}${lunch_break.padEnd(20, ' ')}${duration.hours} hours & ${duration.minutes} minutes\n`;
-        signtime_string += `${time_in + ' '.repeat(12)}${time_out + ' '.repeat(18)}${lunch_break.padEnd(38, ' ')}${duration.hours} hrs & ${duration.minutes} min\n`;
+        signtime_string += `${time_in + ' '.repeat(12)}${time_out + ' '.repeat(18)}${lunch_break.padEnd(35, ' ')}${duration.hours} hrs & ${duration.minutes} min\n`;
 
         const holiday = entries[i].holiday_name;
         if(holiday != "undefined" && holiday != "") {
