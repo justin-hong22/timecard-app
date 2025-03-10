@@ -23,7 +23,7 @@ const report_type = ReportWorkflow.addStep(
   {
     title: "Generate Report",
     interactivity: ReportWorkflow.inputs.interactivity,
-    submit_label: "Generate Report",
+    submit_label: "作成 (Generate Report)",
     fields: {
       elements: [
         {
