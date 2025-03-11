@@ -60,7 +60,7 @@ const inputForm = SaveTimeWorkflow.addStep(
   }
 );
 
-SaveTimeWorkflow.addStep(SaveTimeFunction, {
+const msg = SaveTimeWorkflow.addStep(SaveTimeFunction, {
   time_in: inputForm.outputs.fields.time_in,
   time_out: inputForm.outputs.fields.time_out,
   lunch_break: inputForm.outputs.fields.lunch_break,
@@ -72,7 +72,7 @@ SaveTimeWorkflow.addStep(SaveTimeFunction, {
 
 SaveTimeWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: SaveTimeWorkflow.inputs.channel,
-  message: `<@${SaveTimeWorkflow.inputs.user_id}>の時間エントリー正常に保存されました (Time entry has been successfully saved for <@${SaveTimeWorkflow.inputs.user_id}>)`
+  message: `<@${SaveTimeWorkflow.inputs.user_id}>${msg.outputs.confirmation_message}<@${SaveTimeWorkflow.inputs.user_id}>)`
 });
 
 export default SaveTimeWorkflow;

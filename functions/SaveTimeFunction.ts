@@ -1,5 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { TIMECARD_DATASTORE } from "../datastores/TimecardDatastore.ts";
+import { getPrimaryKey } from "./DeleteTimeFunction.ts";
 
 export const SaveTimeFunction = DefineFunction({
   callback_id: "save_time",
@@ -76,31 +77,45 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
     holiday_name = FindHoliday(date_in);
   }
 
-  const uuid = crypto.randomUUID();
-  const putResponse = await client.apps.datastore.put({
-    datastore: TIMECARD_DATASTORE,
-    item: {
-      id: uuid,
-      person_name: name,
-      time_in: date_in,
-      time_out: date_out,
-      duration: duration,
-      lunch_break: lunch_break,
-      holiday_name: holiday_name,
-      comments: comments,
-    }
-  });
+  const time_in_date = date_in.toISOString().split('T')[0]; 
+  const existing_entry = await getPrimaryKey(name, time_in_date, client, "timecard_datastore");
+  if(existing_entry.length == 0)
+  {
+    const uuid = crypto.randomUUID();
+    const putResponse = await client.apps.datastore.put({
+      datastore: TIMECARD_DATASTORE,
+      item: {
+        id: uuid,
+        person_name: name,
+        time_in: date_in,
+        time_out: date_out,
+        duration: duration,
+        lunch_break: lunch_break,
+        holiday_name: holiday_name,
+        comments: comments,
+      }
+    });
 
-  console.log(putResponse);
-  if (!putResponse.ok) {
-    return { error: `Failed to store time: ${putResponse.error}` };
+    if (!putResponse.ok) {
+      return { error: `Failed to store time: ${putResponse.error}` };
+    }
+  }
+  else 
+  {
+    if(!from_msg) {
+      return { outputs: { confirmation_message: `は${time_in_date}にもう保存されました (A time entry already exists at ${time_in_date} for `} }
+    }
+    else {
+      return { outputs: { confirmation_message: `${time_in_date}にもう保存されました (A time entry already exists at ${time_in_date}`} }
+    }
   }
 
+  //Successfully saved time messages go here
   if(from_msg && is_first_msg) { 
     return { outputs: { confirmation_message: `今日の最初メッセージから時間エントリーを保存されました！ (Time entry has been saved from first message of the day!)`} }
   }
 
-  return { outputs: {} };
+  return { outputs: { confirmation_message: "の時間エントリー正常に保存されました (Time entry has been successfully saved for "} };
 });
 
 export function FindHoliday(input_date : Date)
