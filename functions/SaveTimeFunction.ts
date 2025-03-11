@@ -106,7 +106,7 @@ export default SlackFunction(SaveTimeFunction, async({inputs, client}) => {
       return { outputs: { confirmation_message: `は${time_in_date}にもう保存されました (A time entry already exists at ${time_in_date} for `} }
     }
     else {
-      return { outputs: { confirmation_message: `${time_in_date}にもう保存されました (A time entry already exists at ${time_in_date}`} }
+      return { outputs: { confirmation_message: `${time_in_date}にもう保存されました (A time entry already exists at ${time_in_date})`} }
     }
   }
 
