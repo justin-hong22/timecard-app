@@ -8,6 +8,10 @@ export const TemplateSenderFunction = DefineFunction({
   source_file: "functions/TemplateSenderFunction.ts",
   input_parameters: {
     properties: {
+      decision: {
+        type: Schema.types.boolean,
+        description: "What the user decided"
+      },
       api_key: {
         type: Schema.types.string,
         description: "SignTime API key"
@@ -33,10 +37,15 @@ export const TemplateSenderFunction = DefineFunction({
         description: "List the comments if any"
       },
     },
-    required: ['api_key', 'user', 'report_type', 'time_data', 'holidays', 'comments'],
+    required: ['decision', 'api_key', 'user', 'report_type', 'time_data', 'holidays', 'comments'],
   },
   output_parameters: {
-    properties: {},
+    properties: {
+      message: {
+        type: Schema.types.string,
+        description: "Output Message to slack"
+      }
+    },
     required: [],
   }
 });
@@ -51,6 +60,10 @@ async function getUserInfo(client : SlackAPIClient, user_id: string)
 }
 
 export default SlackFunction(TemplateSenderFunction, async({inputs, env, client}) => {
+  if(inputs.decision == false) {
+    return { outputs: { message: "報告が却下されので署名は不要 (Report was denied, so no signature required)" } }
+  }
+
   const template_id = String(env.TEMPLATE_ID).trim();
   const api_key = String(inputs.api_key);
   const report_type = String(inputs.report_type);
@@ -99,5 +112,5 @@ export default SlackFunction(TemplateSenderFunction, async({inputs, env, client}
     throw new Error(`An error was encountered - ${error.message}`);
   }
 
-  return { outputs: {} }
+  return { outputs: { message: "報告書は承認されましたのでメールに送信された文書に署名してください (Report was approved, so please sign the document sent to your email)" } }
 });

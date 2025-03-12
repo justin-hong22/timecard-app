@@ -3,6 +3,7 @@ import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
 import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
 import { GetOAuthFunction } from "../functions/GetOAuthFunction.ts";
 import { TemplateSenderFunction } from "../functions/TemplateSenderFunction.ts";
+import { ApproveFunction } from "../functions/ApproveFunction.ts";
 
 const ReportWorkflow = DefineWorkflow({
   callback_id: "report_workflow",
@@ -48,6 +49,13 @@ const report_type = ReportWorkflow.addStep(
   }
 );
 
+const decision = ReportWorkflow.addStep(ApproveFunction, {
+  interactivity: report_type.outputs.interactivity,
+  user_id: report_type.outputs.fields.user,
+  report_type: report_type.outputs.fields.report_type,
+});
+
+//SignTime API Begins here
 const time_entries = ReportWorkflow.addStep(CollectTimeFunction, {});
 
 const report = ReportWorkflow.addStep(CreateReportFunction, {
@@ -56,10 +64,10 @@ const report = ReportWorkflow.addStep(CreateReportFunction, {
   time_entries: time_entries.outputs.time_entries,
 });
 
-//SignTime API Begins here
 const api_key = ReportWorkflow.addStep(GetOAuthFunction, {});
 
-ReportWorkflow.addStep(TemplateSenderFunction, {
+const msg = ReportWorkflow.addStep(TemplateSenderFunction, {
+  decision: decision.outputs.decision,
   api_key: api_key.outputs.api_key,
   user: report_type.outputs.fields.user,
   report_type: report_type.outputs.fields.report_type,
@@ -70,11 +78,7 @@ ReportWorkflow.addStep(TemplateSenderFunction, {
 
 ReportWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: ReportWorkflow.inputs.channel,
-  message: 
-    `<@${report_type.outputs.fields.user}>の時間エントリー (Inputted time entries so far for <@${report_type.outputs.fields.user}>)\n` +
-    `${report.outputs.table_string}\n\n` +
-    `祝日経過 (Holidays Passed): ${report.outputs.holidays}\n\n` + 
-    `コメント (Comments):\n${report.outputs.comments}`,
+  message: `${msg.outputs.message}`
 });
 
 export default ReportWorkflow;
