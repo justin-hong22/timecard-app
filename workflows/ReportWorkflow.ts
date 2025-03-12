@@ -1,9 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
-import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
+import { ApproveFunction } from "../functions/ApproveFunction.ts";
 import { GetOAuthFunction } from "../functions/GetOAuthFunction.ts";
 import { TemplateSenderFunction } from "../functions/TemplateSenderFunction.ts";
-import { ApproveFunction } from "../functions/ApproveFunction.ts";
 
 const ReportWorkflow = DefineWorkflow({
   callback_id: "report_workflow",
@@ -49,28 +47,22 @@ const report_type = ReportWorkflow.addStep(
   }
 );
 
-const decision = ReportWorkflow.addStep(ApproveFunction, {
+const report = ReportWorkflow.addStep(ApproveFunction, {
   interactivity: report_type.outputs.interactivity,
   user_id: report_type.outputs.fields.user,
   report_type: report_type.outputs.fields.report_type,
 });
 
 //SignTime API Begins here
-const time_entries = ReportWorkflow.addStep(CollectTimeFunction, {});
-
-const report = ReportWorkflow.addStep(CreateReportFunction, {
-  user: report_type.outputs.fields.user,
-  report_type: report_type.outputs.fields.report_type,
-  time_entries: time_entries.outputs.time_entries,
+const api_key = ReportWorkflow.addStep(GetOAuthFunction, {
+  decision: report.outputs.decision,
 });
 
-const api_key = ReportWorkflow.addStep(GetOAuthFunction, {});
-
 const msg = ReportWorkflow.addStep(TemplateSenderFunction, {
-  decision: decision.outputs.decision,
   api_key: api_key.outputs.api_key,
   user: report_type.outputs.fields.user,
   report_type: report_type.outputs.fields.report_type,
+  decision: report.outputs.decision,
   time_data: report.outputs.signtime_string,
   holidays: report.outputs.holidays,
   comments: report.outputs.comments,

@@ -6,8 +6,13 @@ export const GetOAuthFunction = DefineFunction({
   description: "Gets an API Key to access SignTime API",
   source_file: "functions/GetOAuthFunction.ts",
   input_parameters: {
-    properties: {},
-    required: [],
+    properties: {
+      decision: {
+        type: Schema.types.boolean,
+        description: "What the user decided"
+      },
+    },
+    required: ['decision'],
   },
   output_parameters: {
     properties: {
@@ -16,12 +21,16 @@ export const GetOAuthFunction = DefineFunction({
         description: "SignTime API key to call its functions"
       },
     },
-    required: [],
+    required: ['api_key'],
   }
 });
 
-export default SlackFunction(GetOAuthFunction, async({env}) => 
+export default SlackFunction(GetOAuthFunction, async({inputs, env}) => 
 {
+  if(inputs.decision == false) {
+    return { outputs: { api_key: "" } }
+  }
+
   let api_key = "";
   const endpoint = "https://api.signtime.com/oauth/token/";
   const headers = {};

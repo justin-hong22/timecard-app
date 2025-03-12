@@ -29,9 +29,21 @@ export const ApproveFunction = DefineFunction({
       decision: {
         type: Schema.types.boolean,
         description: "What the user decided"
-      }
+      },
+      signtime_string: {
+        type: Schema.types.string,
+        description: "Time entries to send via SignTime API"
+      },
+      holidays: {
+        type: Schema.types.string,
+        description: "List the holidays if any"
+      },
+      comments: {
+        type: Schema.types.string,
+        description: "List the comments if any"
+      },
     },
-    required: ['decision']
+    required: ['decision', 'signtime_string', 'holidays', 'comments']
   },
 });
 
@@ -95,7 +107,12 @@ export default SlackFunction( ApproveFunction, async({inputs, client}) => {
     const decision = approved ? true : false;
     await client.functions.completeSuccess({
       function_execution_id: body.function_data.execution_id,
-      outputs: {decision: decision},
+      outputs: {
+        decision: decision, 
+        signtime_string: report.signtime_string,
+        holidays: report.holidays,
+        comments: report.comments,
+      },
     });
   }
 );

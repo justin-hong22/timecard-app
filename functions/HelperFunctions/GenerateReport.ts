@@ -105,5 +105,5 @@ export function GenerateReport(user: string, report_type: string, entries: TimeE
   holidays = (holidays != "") ? holidays.slice(0, -2) : "休日なし (No national holidays were elapsed)";
   comments = (comments != "") ? comments : "コメントなし (No comments were mentioned)";
 
-  return {table, holidays, comments}
+  return {table, holidays, comments, signtime_string}
 }
