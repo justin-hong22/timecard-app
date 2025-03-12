@@ -1,5 +1,5 @@
 // deno-lint-ignore no-explicit-any
-export default function approveOrDenyBlock(inputs: any): any[] {
+export default function approveOrDenyBlock(name : string, inputs: any): any[] {
   return [
     {
       type: "header",
@@ -12,7 +12,7 @@ export default function approveOrDenyBlock(inputs: any): any[] {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `時間エントリー (Time Entries):\n${inputs.table}`,
+        text: `<@${name}>の時間エントリー (Time Entries for <@${name}>):\n${inputs.table}`,
       },
     },
     {

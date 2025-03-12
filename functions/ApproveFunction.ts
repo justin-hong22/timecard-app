@@ -39,7 +39,7 @@ export default SlackFunction( ApproveFunction, async({inputs, client}) => {
   const time_entries = await GetTimeEntries(client);
   const report = GenerateReport(String(inputs.user_id), String(inputs.report_type), time_entries);
 
-  const blocks = approveOrDenyBlock(report).concat([{
+  const blocks = approveOrDenyBlock(String(inputs.user_id), report).concat([{
     "type": "actions",
     "block_id": "approve-deny-buttons",
     "elements": [
@@ -83,7 +83,7 @@ export default SlackFunction( ApproveFunction, async({inputs, client}) => {
     await client.chat.update({
       channel: body.container.channel_id,
       ts: body.container.message_ts,
-      blocks: approveOrDenyBlock(report).concat([{
+      blocks: approveOrDenyBlock(String(inputs.user_id), report).concat([{
         type: "context",
         elements: [{
           type: "mrkdwn",
