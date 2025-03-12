@@ -17,6 +17,9 @@ const MessageTrigger: Trigger<typeof MessageWorkflow.definition> = {
           }],
         }, {
           statement: "{{data.thread_ts}} == null",
+        },
+        {
+          statement: "{{data.user_id}} != U083JQ70QDC",
         }],
       },
       version: 1,
