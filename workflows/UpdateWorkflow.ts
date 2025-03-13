@@ -1,7 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { UpdateTimeFunction } from "../functions/UpdateTimeFunction.ts";
-import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
-import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
+import { PresentReportOnChannel } from "../functions/PresentReportOnChannel.ts";
 
 const UpdateEntryWorkflow = DefineWorkflow({
   callback_id: "update_entry",
@@ -81,12 +80,9 @@ const update_msg = UpdateEntryWorkflow.addStep(UpdateTimeFunction, {
   comments: inputForm.outputs.fields.comments,
 });
 
-const time_entries = UpdateEntryWorkflow.addStep(CollectTimeFunction, {});
-
-const report = UpdateEntryWorkflow.addStep(CreateReportFunction, {
-  user: UpdateEntryWorkflow.inputs.user_id,
+const report = UpdateEntryWorkflow.addStep(PresentReportOnChannel, {
+  user_id: inputForm.outputs.fields.name,
   report_type: "一般 (General)",
-  time_entries: time_entries.outputs.time_entries,
 });
 
 UpdateEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
@@ -94,7 +90,7 @@ UpdateEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
   message:
     `${update_msg.outputs.confirmation_message}\n` +
     `<@${UpdateEntryWorkflow.inputs.user_id}>のアップデートした後時間エントリー (Below are saved time entries after the update for <@${UpdateEntryWorkflow.inputs.user_id}>)\n` +
-    `${report.outputs.table_string}\n\n` +
+    `${report.outputs.table}\n\n` +
     `祝日経過 (Holidays Passed): ${report.outputs.holidays}\n\n` + 
     `コメント (Comments):\n${report.outputs.comments}`,
 });

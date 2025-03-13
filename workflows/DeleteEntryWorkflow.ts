@@ -1,7 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { DeleteTimeFunction } from "../functions/DeleteTimeFunction.ts";
-import { CollectTimeFunction } from "../functions/CollectTimeEntries.ts";
-import { CreateReportFunction } from "../functions/CreateReportFunction.ts";
+import { PresentReportOnChannel } from "../functions/PresentReportOnChannel.ts";
 
 const DeleteEntryWorkflow = DefineWorkflow({
   callback_id: "delete_entry",
@@ -47,12 +46,9 @@ const delete_msg = DeleteEntryWorkflow.addStep(DeleteTimeFunction, {
   date: inputForm.outputs.fields.date,
 });
 
-const time_entries = DeleteEntryWorkflow.addStep(CollectTimeFunction, {});
-
-const report = DeleteEntryWorkflow.addStep(CreateReportFunction, {
-  user: DeleteEntryWorkflow.inputs.user_id,
+const report = DeleteEntryWorkflow.addStep(PresentReportOnChannel, {
+  user_id: inputForm.outputs.fields.name,
   report_type: "一般 (General)",
-  time_entries: time_entries.outputs.time_entries,
 });
 
 DeleteEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
@@ -60,7 +56,7 @@ DeleteEntryWorkflow.addStep(Schema.slack.functions.SendMessage, {
   message:
     `${delete_msg.outputs.confirmation_message}\n` +
     `<@${DeleteEntryWorkflow.inputs.user_id}>の削除した後残り時間エントリー (Saved time entries after the deletion for <@${DeleteEntryWorkflow.inputs.user_id}>)\n` +
-    `${report.outputs.table_string}\n\n` +
+    `${report.outputs.table}\n\n` +
     `祝日経過 (Holidays Passed): ${report.outputs.holidays}\n\n` + 
     `コメント (Comments):\n${report.outputs.comments}`,
 });

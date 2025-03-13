@@ -1,7 +1,7 @@
 import { DefineFunction, SlackFunction, Schema } from "deno-slack-sdk/mod.ts";
 import approveOrDenyBlock from "./Block.ts";
-import { GetTimeEntries } from "./HelperFunctions/GetTimeEntries.ts";
-import { GenerateReport } from "./HelperFunctions/GenerateReport.ts";
+import { CollectTimeEntries } from "./CollectTimeEntries.ts";
+import { GenerateReport } from "./GenerateReport.ts";
 
 export const ApproveFunction = DefineFunction({
   callback_id: "approve",
@@ -48,7 +48,7 @@ export const ApproveFunction = DefineFunction({
 });
 
 export default SlackFunction( ApproveFunction, async({inputs, client}) => {
-  const time_entries = await GetTimeEntries(client);
+  const time_entries = await CollectTimeEntries(client);
   const report = GenerateReport(String(inputs.user_id), String(inputs.report_type), time_entries);
 
   const blocks = approveOrDenyBlock(String(inputs.user_id), report).concat([{
@@ -88,7 +88,7 @@ export default SlackFunction( ApproveFunction, async({inputs, client}) => {
   ["approve_id", "deny_id"],
   async function ({ action, body, client, inputs }) 
   {
-    const time_entries = await GetTimeEntries(client);
+    const time_entries = await CollectTimeEntries(client);
     const report = GenerateReport(String(inputs.user_id), String(inputs.report_type), time_entries);
     const approved = action.action_id === "approve_id";
     

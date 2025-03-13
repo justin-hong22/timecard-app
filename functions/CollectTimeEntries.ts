@@ -1,7 +1,7 @@
 import { SlackAPIClient } from "deno-slack-api/types.ts";
-import TimecardDatastore, { TIMECARD_DATASTORE } from "../../datastores/TimecardDatastore.ts";
+import TimecardDatastore, { TIMECARD_DATASTORE } from "../datastores/TimecardDatastore.ts";
 
-export async function GetTimeEntries(client : SlackAPIClient)
+export async function CollectTimeEntries(client : SlackAPIClient)
 {
   const time_info = await client.apps.datastore.query<typeof TimecardDatastore.definition>({ datastore: TIMECARD_DATASTORE });
   if (!time_info.ok) {

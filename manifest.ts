@@ -6,14 +6,13 @@ import MessageWorkflow from "./workflows/MessageWorkflow.ts";
 import DeleteEntryWorkflow from "./workflows/DeleteEntryWorkflow.ts";
 import UpdateEntryWorkflow from "./workflows/UpdateWorkflow.ts";
 import { SaveTimeFunction } from "./functions/SaveTimeFunction.ts";
-import { CollectTimeFunction } from "./functions/CollectTimeEntries.ts";
-import { CreateReportFunction } from "./functions/CreateReportFunction.ts";
+import { ApproveFunction } from "./functions/ApproveFunction.ts";
 import { GetOAuthFunction } from "./functions/GetOAuthFunction.ts";
 import { TemplateSenderFunction } from "./functions/TemplateSenderFunction.ts";
 import { FindFirstMessage } from "./functions/FindFirstMessageFunction.ts";
 import { DeleteTimeFunction } from "./functions/DeleteTimeFunction.ts";
 import { UpdateTimeFunction } from "./functions/UpdateTimeFunction.ts";
-import { ApproveFunction } from "./functions/ApproveFunction.ts";
+import { PresentReportOnChannel } from "./functions/PresentReportOnChannel.ts";
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
 import MessageDatastore from "./datastores/MessageDatastore.ts";
 import { TimeCardType } from "./types/TimeCardType.ts";
@@ -28,8 +27,8 @@ export default Manifest({
   description: "A blank template for building Slack apps with Deno",
   icon: "assets/default_new_app_icon.png",
   datastores: [TimecardDatastore, MessageDatastore],
-  functions: [SaveTimeFunction, CollectTimeFunction, CreateReportFunction, GetOAuthFunction, TemplateSenderFunction, 
-    FindFirstMessage, DeleteTimeFunction, UpdateTimeFunction, ApproveFunction],
+  functions: [SaveTimeFunction, GetOAuthFunction, TemplateSenderFunction, FindFirstMessage, DeleteTimeFunction, UpdateTimeFunction, 
+    ApproveFunction, PresentReportOnChannel],
   workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow, DeleteEntryWorkflow, UpdateEntryWorkflow],
   types: [TimeCardType],
   outgoingDomains: ['api.signtime.com'],
