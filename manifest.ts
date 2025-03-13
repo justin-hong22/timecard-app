@@ -15,7 +15,6 @@ import { UpdateTimeFunction } from "./functions/UpdateTimeFunction.ts";
 import { PresentReportOnChannel } from "./functions/PresentReportOnChannel.ts";
 import TimecardDatastore from "./datastores/TimecardDatastore.ts";
 import MessageDatastore from "./datastores/MessageDatastore.ts";
-import { TimeCardType } from "./types/TimeCardType.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -30,7 +29,7 @@ export default Manifest({
   functions: [SaveTimeFunction, GetOAuthFunction, TemplateSenderFunction, FindFirstMessage, DeleteTimeFunction, UpdateTimeFunction, 
     ApproveFunction, PresentReportOnChannel],
   workflows: [SaveTimeWorkflow, ReportWorkflow, DailyReminderWorkflow, MessageWorkflow, DeleteEntryWorkflow, UpdateEntryWorkflow],
-  types: [TimeCardType],
+  types: [],
   outgoingDomains: ['api.signtime.com'],
   botScopes: [
     "commands", 
